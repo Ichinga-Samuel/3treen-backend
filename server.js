@@ -10,8 +10,8 @@ var config = require('./config/config');
 var fs = require('fs');
 const express = require('express')
 const app = express()
-const adminRoute = require('./routes/adminRoute')
-const indexRoute = require('./routes/index')
+const indexRoute = require('./routes/index-route')
+const adminRoute = require('./routes/admin-route')
 
 // Instantiate the HTTP server
 var httpServer = http.createServer(app);
@@ -33,7 +33,7 @@ httpsServer.listen(config.httpsPort, function () {
   console.log('The HTTPS server is running on port ' + config.httpsPort);
 });
 
-app.use('/admin', adminRoute.routes)
+app.use('/admin', adminRoute)
 app.use(indexRoute.routes);
 // All the server logic for both the http and https server
 
