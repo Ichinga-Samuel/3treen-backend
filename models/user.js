@@ -1,14 +1,48 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const userSchema = mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
+  fullName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+
   email: {
     type: String,
     required: true,
     unique: true,
-    match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
+    //An alternative to regex to perform email validation
+    validate: [validator.isEmail, 'Please Provide a valid email'],
   },
-  password: { type: String, required: true },
+
+  password: {
+    type: String,
+    required: true,
+    select: false,
+    minlength: [8, 'A password should be at least 8 characters'],
+  },
+
+  passwordConfirm: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (el) {
+        // This only works on CREATE and SAVE!!!
+        return el === this.password;
+      },
+
+      message: 'Passwords are not the same!',
+    },
+  },
+
+  homePhone: {
+    type: Number,
+  },
+
+  workPhone: {
+    type: Number,
+  },
 });
 
 module.exports = mongoose.model('User', userSchema);
