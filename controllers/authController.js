@@ -5,6 +5,49 @@ const AppError = require('../utils/appError');
 const createSendToken = require('../utils/createAndSignToken');
 const sendEmail = require('../utils/email');
 
+//Code for user signup
+exports.signup = catchAsync(async (req, res, next) => {
+  const userData = { ...req.body };
+  const { name, email, password, passwordConfirm, gender } = userData;
+  const newUser = await User.create({
+    name,
+    email,
+    password,
+    passwordConfirm,
+    gender,
+  });
+
+  createSendToken(newUser, 201, res);
+});
+
+//Code for user login
+exports.login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
+  console.log(email, password);
+
+  //1) check if email or password was passed in
+  if (!email || !password) {
+    return next(new AppError('Pleae Provide email and password!', 400));
+  }
+
+  //2) Check if  user exists && password is correct
+  const user = await User.findOne({ email }).select('+password');
+
+  if (!user) {
+    return next(new AppError('No User with that email', 404));
+  }
+
+  //Check if inputed password is correct
+  const correct = await user.correctPassword(password, user.password);
+
+  if (!correct) {
+    return next(new AppError('Incorrect email or password', 401));
+  }
+
+  //3) If everything is ok, send token to client
+  createSendToken(user, 200, res);
+});
+
 exports.protect = catchAsync(async (req, res, next) => {
   //1) Getting token and check if its there
   let token;
