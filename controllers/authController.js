@@ -2,19 +2,32 @@ const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const createSendToken = require('../utils/createAndSignToken');
+const signToken = require('../utils/signToken');
 const sendEmail = require('../utils/email');
+const User = require('../models/userModel');
+
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+
+  //Remove password from output
+  user.password = undefined;
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    user,
+  });
+};
 
 //Code for user signup
 exports.signup = catchAsync(async (req, res, next) => {
   const userData = { ...req.body };
-  const { name, email, password, passwordConfirm, gender } = userData;
+  console.log(userData);
+  const { fullName, email, password, passwordConfirm } = userData;
   const newUser = await User.create({
-    name,
+    fullName,
     email,
     password,
     passwordConfirm,
-    gender,
   });
 
   createSendToken(newUser, 201, res);
@@ -23,11 +36,11 @@ exports.signup = catchAsync(async (req, res, next) => {
 //Code for user login
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  console.log(email, password);
+  // console.log(email, password);
 
   //1) check if email or password was passed in
   if (!email || !password) {
-    return next(new AppError('Pleae Provide email and password!', 400));
+    return next(new AppError('Please Provide email and password!', 400));
   }
 
   //2) Check if  user exists && password is correct
@@ -38,6 +51,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   //Check if inputed password is correct
+  console.log(password === user.password);
   const correct = await user.correctPassword(password, user.password);
 
   if (!correct) {

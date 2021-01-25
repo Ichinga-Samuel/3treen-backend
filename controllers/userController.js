@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const User = require('../models/orderModel');
 const catchAsync = require('../utils/catchAsync');
+const factory = require('../controllers/handlerFactory');
+const User = require('../models/orderModel');
 
 exports.user_signup = (req, res, next) => {
   User.find({ email: req.body.email })
@@ -130,4 +131,13 @@ exports.user_update = catchAsync(async (req, res, next) => {
     status: 'success',
     user: updatedUser,
   });
+});
+
+//Get a particular user
+exports.getUser = factory.getOne(User);
+
+//Get me Middleware
+exports.getMe = catchAsync(async (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
 });

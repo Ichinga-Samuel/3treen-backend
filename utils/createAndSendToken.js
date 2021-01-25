@@ -1,4 +1,4 @@
-const signToken = require('../utils/signToken');
+const signToken = require('./signToken');
 
 module.exports = (user, statusCode, res) => {
   const token = signToken(user._id);
