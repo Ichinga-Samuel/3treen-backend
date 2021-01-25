@@ -43,6 +43,12 @@ const userSchema = mongoose.Schema({
   workPhone: {
     type: Number,
   },
+
+  role: {
+    type: String,
+    enum: ['admin', 'user'],
+    default: 'user',
+  },
 });
 
 module.exports = mongoose.model('User', userSchema);

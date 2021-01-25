@@ -10,12 +10,15 @@ const app = express();
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
-const shopRoute = require('./routes/shopRoutes');
-const adminRoute = require('./routes/adminRoutes');
+const shopRouter = require('./routes/shopRoutes');
+const adminRouter = require('./routes/adminRoutes');
+const userRouter = require('./routes/userRoutes');
 
 //ROUTES
-app.use('/api/v1/admin', adminRoute);
-app.use(shopRoute.routes);
+app.use('/api/v1/admin', adminRouter);
+app.use('/api/v1/users', userRouter);
+
+app.use(shopRouter.routes);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
