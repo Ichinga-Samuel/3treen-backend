@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const User = require('../models/order');
+const User = require('../models/orderModel');
 const catchAsync = require('../utils/catchAsync');
 
 exports.user_signup = (req, res, next) => {

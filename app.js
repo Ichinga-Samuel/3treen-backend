@@ -9,9 +9,9 @@ const express = require('express');
 const app = express();
 
 const AppError = require('./utils/appError');
-const globalErrorHandler = require('./controller/errorController');
-const shopRoute = require('./routes/shop');
-const adminRoute = require('./routes/admin');
+const globalErrorHandler = require('./controllers/errorController');
+const shopRoute = require('./routes/shopRoutes');
+const adminRoute = require('./routes/adminRoutes');
 
 //ROUTES
 app.use('/api/v1/admin', adminRoute);
