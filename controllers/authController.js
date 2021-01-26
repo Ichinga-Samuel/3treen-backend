@@ -5,6 +5,7 @@ const AppError = require('../utils/appError');
 const signToken = require('../utils/signToken');
 const sendEmail = require('../utils/email');
 const User = require('../models/userModel');
+const crypto = require('crypto');
 
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
@@ -21,7 +22,7 @@ const createSendToken = (user, statusCode, res) => {
 //Code for user signup
 exports.signup = catchAsync(async (req, res, next) => {
   const userData = { ...req.body };
-  console.log(userData);
+
   const { fullName, email, password, passwordConfirm } = userData;
   const newUser = await User.create({
     fullName,
@@ -51,7 +52,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   //Check if inputed password is correct
-  console.log(password === user.password);
+
   const correct = await user.correctPassword(password, user.password);
 
   if (!correct) {

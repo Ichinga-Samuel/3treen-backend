@@ -1,10 +1,3 @@
-/*
- * Primary file for API
- *
- */
-
-// Dependencies
-
 const express = require('express');
 const app = express();
 

@@ -52,6 +52,20 @@ const userSchema = mongoose.Schema({
   },
 });
 
+//DOCUMENT MIDDLEWARE
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+
+  //Hash password with cost of 12
+  this.password = await bcrypt.hash(this.password, 12);
+
+  //Delete the passwordConfirm field
+  this.passwordConfirm = undefined;
+  next();
+});
+
 //INSTANCE METHODS
 userSchema.methods.correctPassword = async function (
   inputedPassword,
@@ -73,7 +87,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   return false;
 };
 
-userSchema.methods.createPassswordResetToken = function () {
+userSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString('hex');
 
   this.passwordResetToken = crypto
