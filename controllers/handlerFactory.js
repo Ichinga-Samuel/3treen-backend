@@ -3,11 +3,7 @@ const AppError = require('../utils/appError');
 
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    let filter = {};
-    if (req.params.postId) filter = { post: req.params.postId };
-    if (req.params.category) filter = { category: req.params.category };
-
-    const doc = await Model.find(filter);
+    const doc = await Model.find();
 
     res.status(200).json({
       status: 'success',
@@ -19,7 +15,7 @@ exports.getAll = (Model) =>
 exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    console.log(id);
+
     let query = Model.findById(id);
 
     if (popOptions) {
