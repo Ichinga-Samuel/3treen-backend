@@ -47,3 +47,12 @@ exports.getMe = catchAsync(async (req, res, next) => {
   req.params.id = req.user.id;
   next();
 });
+
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await User.find({ role: 'user' });
+
+  res.status(200).json({
+    results: users.length,
+    users,
+  });
+});

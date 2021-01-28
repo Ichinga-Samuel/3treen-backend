@@ -29,4 +29,6 @@ router.patch('/updateUser', authController.protect, userController.user_update);
 
 router.route('/:id').get(userController.getUser);
 
+router.route('/').get(userController.getAllUsers);
+
 module.exports = router;
