@@ -13,6 +13,9 @@ router
   .route('/myOrders')
   .get(authController.protect, orderController.getUserOrders);
 
-router.route('/:id').get(orderController.getSingleOrder);
+router
+  .route('/:id')
+  .get(orderController.getSingleOrder)
+  .patch(authController.protect, orderController.cancelOrder);
 
 module.exports = router;

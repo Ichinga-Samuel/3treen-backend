@@ -46,3 +46,32 @@ exports.getUserOrders = catchAsync(async (req, res, next) => {
     userOrders,
   });
 });
+
+exports.cancelOrder = catchAsync(async (req, res, next) => {
+  //Get Id from params
+  const { id } = req.params;
+
+  //Check if the users match
+  const order = await Order.findById(id);
+
+  if (order.user != req.user.id) {
+    return next(
+      new AppError(`You cannot cancel an order that isn't yours`, 403)
+    );
+  }
+
+  //Find and Update Order status field to Canceled
+  const cancelledOrder = await Order.findByIdAndUpdate(
+    id,
+    { status: 'Cancelled' },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    status: 'success',
+    cancelledOrder,
+  });
+});
