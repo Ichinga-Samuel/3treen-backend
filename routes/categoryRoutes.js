@@ -7,11 +7,18 @@ const categoryController = require('../controllers/categoryController');
 router
   .route('/')
   .get(categoryController.getAllCategories)
-  .post(categoryController.createCategory);
+  .post(
+    authController.protect,
+    authController.accessControl,
+    categoryController.createCategory
+  );
+
+router.use(authController.protect, authController.accessControl);
 
 router
   .route('/:id')
   .delete(categoryController.deleteCategory)
-  .patch(categoryController.updateCategory);
+  .patch(categoryController.updateCategory)
+  .get(categoryController.getSingleCategory);
 
 module.exports = router;

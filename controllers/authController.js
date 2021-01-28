@@ -103,6 +103,15 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+//Access Control
+exports.accessControl = catchAsync(async (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    return next(new AppError('Only Admins can do this', 403));
+  }
+
+  next();
+});
+
 //Code to reset User password
 exports.resetPassword = catchAsync(async (req, res, next) => {
   //1) Get user based on the token
