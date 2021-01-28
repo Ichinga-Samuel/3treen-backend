@@ -19,19 +19,8 @@ exports.createOrder = catchAsync(async (req, res, next) => {
   //distructure fields from request object
   const { state, LGA, phoneNumber } = req.body;
 
-  //Get total number of products ordered
-  const quantity = cart.map((el) => el.quantity).reduce((a, b) => a + b);
-
-  //Get total price of each item for the quantity specified
-  const prices = cart.map((el) => el.quantity * el.product.price);
-
-  //Get total price of the entire cart
-  const totalCost = prices.reduce((a, b) => a + b);
-
   //finally create order
   const order = await Order.create({
-    quantity,
-    totalCost,
     state,
     LGA,
     phoneNumber,
