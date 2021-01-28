@@ -34,18 +34,27 @@ const orderSchema = mongoose.Schema({
     required: true,
     trim: true,
   },
+
+  status: {
+    type: String,
+    default: 'Pending',
+    enum: ['Pending', 'Delivered'],
+  },
+
+  deliveryCode: {
+    type: String,
+  },
 });
 
 //DOCUMENT MIDDLEWARE
 orderSchema.pre('save', function (next) {
   //Save total number of products ordered
-  console.log(this);
+
   this.quantity = this.cart.map((el) => el.quantity).reduce((a, b) => a + b);
-  console.log(this.quantity);
+
   //Get total price of each item for the quantity specified
   const prices = this.cart.map((el) => el.quantity * el.product.price);
 
-  console.log(prices);
   //Save total price for the entire cart
   this.totalCost = prices.reduce((a, b) => a + b);
 

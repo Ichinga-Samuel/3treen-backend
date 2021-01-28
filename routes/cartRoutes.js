@@ -5,7 +5,10 @@ const router = express.Router();
 const cartController = require('../controllers/cartController');
 const authController = require('../controllers/authController');
 
-router.route('/').get(cartController.getAllCartItems);
+router
+  .route('/')
+  .get(cartController.getAllCartItems)
+  .delete(authController.protect, cartController.clearCart);
 
 router
   .route('/:productId')

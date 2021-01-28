@@ -78,3 +78,12 @@ exports.updateCartItem = catchAsync(async (req, res, next) => {
 });
 
 exports.removeFromCart = factory.deleteOne(CartItem);
+
+exports.clearCart = catchAsync(async (req, res, next) => {
+  //Delete cart items whose user field matches the current user id
+  await CartItem.deleteMany({ user: req.user.id });
+
+  res.status(204).json({
+    status: 'success',
+  });
+});
