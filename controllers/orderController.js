@@ -28,6 +28,9 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     cart,
   });
 
+  //Delete cart items whose user field matches the current user id
+  await CartItem.deleteMany({ user: req.user.id });
+
   res.status(200).json({
     status: 'success',
     order,
