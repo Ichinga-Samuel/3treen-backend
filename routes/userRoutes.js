@@ -31,4 +31,6 @@ router.route('/:id').get(userController.getUser);
 
 router.route('/').get(userController.getAllUsers);
 
+router.patch('/:userId/:role', userController.updateUserRole);
+
 module.exports = router;

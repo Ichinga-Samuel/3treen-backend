@@ -56,3 +56,21 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     users,
   });
 });
+
+exports.updateUserRole = catchAsync(async (req, res, next) => {
+  const { userId, role } = req.params;
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { role },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    status: 'success',
+    updatedUser,
+  });
+});
