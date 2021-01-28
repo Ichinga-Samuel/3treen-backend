@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
 
 const orderSchema = mongoose.Schema({
-  cart: {
+  products: {
     type: Array,
+    required: true,
+  },
+
+  user: {
+    type: String,
     required: true,
   },
 
@@ -50,10 +55,12 @@ const orderSchema = mongoose.Schema({
 orderSchema.pre('save', function (next) {
   //Save total number of products ordered
 
-  this.quantity = this.cart.map((el) => el.quantity).reduce((a, b) => a + b);
+  this.quantity = this.products
+    .map((el) => el.quantity)
+    .reduce((a, b) => a + b);
 
   //Get total price of each item for the quantity specified
-  const prices = this.cart.map((el) => el.quantity * el.product.price);
+  const prices = this.products.map((el) => el.quantity * el.product.price);
 
   //Save total price for the entire cart
   this.totalCost = prices.reduce((a, b) => a + b);

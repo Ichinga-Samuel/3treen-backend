@@ -9,6 +9,10 @@ router.route('/').post(authController.protect, orderController.createOrder);
 
 router.route('/').get(orderController.getAllOrders);
 
+router
+  .route('/myOrders')
+  .get(authController.protect, orderController.getUserOrders);
+
 router.route('/:id').get(orderController.getSingleOrder);
 
 module.exports = router;

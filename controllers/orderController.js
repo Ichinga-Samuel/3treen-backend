@@ -11,9 +11,9 @@ exports.getSingleOrder = factory.getOne(Order);
 
 exports.createOrder = catchAsync(async (req, res, next) => {
   //Fetch cart items with that user id in their field
-  const cart = await CartItem.find({ user: req.user.id });
+  const products = await CartItem.find({ user: req.user.id });
 
-  if (cart.length < 1)
+  if (products.length < 1)
     return next(new AppError('You have nothing in your cart', 401));
 
   //distructure fields from request object
@@ -25,7 +25,8 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     LGA,
     phoneNumber,
     name: req.user.fullName,
-    cart,
+    user: req.user.id,
+    products,
   });
 
   //Delete cart items whose user field matches the current user id
@@ -34,5 +35,14 @@ exports.createOrder = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     order,
+  });
+});
+
+exports.getUserOrders = catchAsync(async (req, res, next) => {
+  const userOrders = await Order.find({ user: req.user.id });
+
+  res.status(200).json({
+    status: 'success',
+    userOrders,
   });
 });
