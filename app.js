@@ -14,6 +14,9 @@ const categoryRouter = require('./routes/categoryRoutes');
 //Body parser
 app.use(express.json({ limit: '10kb' }));
 
+//Serve static file
+app.use(express.static('public'));
+
 //ROUTES
 app.use('/api/v1/admin', adminRouter);
 app.use('/api/v1/users', userRouter);

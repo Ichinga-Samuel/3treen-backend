@@ -1,7 +1,9 @@
 const express = require('express');
-const router = express.Router();
+
 const authController = require('../controllers/authController');
 const userController = require('../controllers/userController');
+
+const router = express.Router();
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
@@ -25,12 +27,23 @@ router.get(
   userController.getUser
 );
 
-router.patch('/updateUser', authController.protect, userController.user_update);
+router.patch(
+  '/updateMe',
+  authController.protect,
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateMe
+);
 
 router.route('/:id').get(userController.getUser);
 
 router.route('/').get(userController.getAllUsers);
 
-router.patch('/:userId/:role', userController.updateUserRole);
+router.patch(
+  '/:userId/:role',
+  authController.protect,
+  authController.accessControl,
+  userController.updateUserRole
+);
 
 module.exports = router;
