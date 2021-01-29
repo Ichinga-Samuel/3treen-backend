@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const productController = require('../controllers/productController');
+const authController = require('../controllers/authController');
 
 router
   .route('/')
@@ -11,7 +12,12 @@ router
 router
   .route('/:id')
   .get(productController.getSingleProduct)
-  .patch(productController.updateProduct)
+  .patch(
+    authController.protect,
+    productController.uploadProductImages,
+    productController.resizeProductImages,
+    productController.updateProduct
+  )
   .delete(productController.deleteProduct);
 
 module.exports = router;
