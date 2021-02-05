@@ -14,4 +14,10 @@ router.post(
   messagesContoller.createMessage
 );
 
+router.get(
+  '/userChat/:roomId',
+  authController.protect,
+  messagesContoller.getChatsBetweenUsers
+);
+
 module.exports = router;

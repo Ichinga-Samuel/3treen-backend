@@ -22,6 +22,7 @@ exports.getMyMessages = catchAsync(async (req, res, next) => {
             timeStamp: '$timeStamp',
             sender: '$sender',
             reciever: '$reciever',
+            roomId: '$roomId',
           },
         },
       },
@@ -61,3 +62,17 @@ exports.createMessage = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllMessages = factory.getAll(Message);
+
+exports.getChatsBetweenUsers = catchAsync(async (req, res, next) => {
+  //Get room Id from params
+  const { roomId } = req.params;
+
+  //Find messages with that room Id field
+  const messages = await Message.find({ roomId });
+
+  //Send response
+  res.status(200).json({
+    status: 'success',
+    messages,
+  });
+});
