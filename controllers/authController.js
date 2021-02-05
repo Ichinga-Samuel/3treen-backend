@@ -6,6 +6,7 @@ const signToken = require('../utils/signToken');
 const sendEmail = require('../utils/email');
 const User = require('../models/userModel');
 const crypto = require('crypto');
+const Referral = require('../models/referralModel');
 
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
@@ -30,6 +31,13 @@ exports.signup = catchAsync(async (req, res, next) => {
     password,
     passwordConfirm,
   });
+
+  if (req.user) {
+    await Referral.create({
+      salesRep: req.user.id,
+      user: newUser,
+    });
+  }
 
   createSendToken(newUser, 201, res);
 });
@@ -99,7 +107,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // GRANT ACCESS TO ROUTE
   req.user = currentUser;
-  console.log('Protect');
 
   next();
 });
