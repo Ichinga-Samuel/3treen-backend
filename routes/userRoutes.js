@@ -20,6 +20,8 @@ router.patch(
   authController.updatePassword
 );
 
+router.route('/salesRep').get(userController.getSalesRep);
+
 router.get(
   '/me',
   authController.protect,

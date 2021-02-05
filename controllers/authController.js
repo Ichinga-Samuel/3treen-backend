@@ -99,6 +99,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // GRANT ACCESS TO ROUTE
   req.user = currentUser;
+  console.log('Protect');
 
   next();
 });
@@ -108,6 +109,7 @@ exports.accessControl = catchAsync(async (req, res, next) => {
   if (req.user.role !== 'admin') {
     return next(new AppError('Only Admins can do this', 403));
   }
+  console.log('access control');
 
   next();
 });

@@ -5,17 +5,6 @@ const catchAsync = require('../utils/catchAsync');
 const factory = require('../controllers/handlerFactory');
 const User = require('../models/userModel');
 
-// const multerStorage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, 'public/img/users');
-//   },
-//   filename: (req, file, cb) => {
-//     //user-6td7qf877-333376t757.jpg
-//     const ext = file.mimetype.split('/')[1];
-//     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
-//   },
-// });
-
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
@@ -89,6 +78,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
   next();
 });
 
+//GET ALL USERS
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
 
@@ -113,5 +103,15 @@ exports.updateUserRole = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     updatedUser,
+  });
+});
+
+//GET ALL USERS
+exports.getSalesRep = catchAsync(async (req, res, next) => {
+  const users = await User.find({ role: 'SR' });
+
+  res.status(200).json({
+    results: users.length,
+    users,
   });
 });
