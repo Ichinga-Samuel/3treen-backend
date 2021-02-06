@@ -30,6 +30,10 @@ const productSchema = mongoose.Schema({
     required: [true, 'A product must have a category'],
     // default: 'Electronics',
   },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 module.exports = mongoose.model('Product', productSchema);
