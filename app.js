@@ -11,6 +11,7 @@ const orderRouter = require('./routes/orderRoutes');
 const cartRouter = require('./routes/cartRoutes');
 const categoryRouter = require('./routes/categoryRoutes');
 const messageRouter = require('./routes/messageRoutes');
+const referralRouter = require('./routes/referralRoutes');
 
 //Body parser
 app.use(express.json({ limit: '10kb' }));
@@ -26,6 +27,7 @@ app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/cart', cartRouter);
 app.use('/api/v1/category', categoryRouter);
 app.use('/api/v1/messages', messageRouter);
+app.use('/api/v1/referrals', referralRouter);
 
 app.use(shopRouter.routes);
 

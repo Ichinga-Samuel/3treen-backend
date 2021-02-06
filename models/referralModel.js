@@ -12,10 +12,20 @@ const referralSchema = mongoose.Schema({
     required: true,
   },
 
-  createAt: {
+  createdAt: {
     type: Date,
     default: Date.now(),
   },
+
+  salesRepId: {
+    type: String,
+  },
+});
+
+//DOCUMENT MIDDLEWARE
+referralSchema.pre('save', async function (next) {
+  this.salesRepId = this.salesRep;
+  next();
 });
 
 module.exports = mongoose.model('Referral', referralSchema);
