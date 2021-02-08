@@ -79,14 +79,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
 });
 
 //GET ALL USERS
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-
-  res.status(200).json({
-    results: users.length,
-    users,
-  });
-});
+exports.getAllUsers = factory.getAll(User);
 
 exports.updateUserRole = catchAsync(async (req, res, next) => {
   const { userId, role } = req.params;
