@@ -5,17 +5,16 @@ const router = express.Router();
 const orderController = require('../controllers/orderController');
 const authController = require('../controllers/authController');
 
-router.route('/').post(authController.protect, orderController.createOrder);
+router.use(authController.protect);
+
+router.route('/').post(orderController.createOrder);
 
 router.route('/').get(orderController.getAllOrders);
 
-router
-  .route('/myOrders')
-  .get(authController.protect, orderController.getUserOrders);
+router.route('/myOrders').get(orderController.getUserOrders);
 
-router
-  .route('/:id')
-  .get(orderController.getSingleOrder)
-  .patch(authController.protect, orderController.cancelOrder);
+router.route('/:id').get(orderController.getSingleOrder);
+
+router.patch('/:id/:status', orderController.updateOrder);
 
 module.exports = router;

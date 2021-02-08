@@ -48,4 +48,4 @@ exports.getUserOrders = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.cancelOrder = orderUpdate('Cancelled');
+exports.updateOrder = orderUpdate();
