@@ -49,3 +49,5 @@ exports.getUserOrders = catchAsync(async (req, res, next) => {
 });
 
 exports.updateOrder = orderUpdate();
+
+exports.specificOrders = factory.getAll(Order);

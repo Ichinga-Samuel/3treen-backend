@@ -17,4 +17,6 @@ router.route('/:id').get(orderController.getSingleOrder);
 
 router.patch('/:id/:status', orderController.updateOrder);
 
+router.route('/status/:status').get(orderController.specificOrders);
+
 module.exports = router;
