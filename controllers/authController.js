@@ -25,11 +25,20 @@ exports.signup = catchAsync(async (req, res, next) => {
   const userData = { ...req.body };
 
   const { fullName, email, password, passwordConfirm } = userData;
+
+  let role;
+  if (req.role) {
+    role = req.role;
+  } else {
+    role = 'user';
+  }
+
   const newUser = await User.create({
     fullName,
     email,
     password,
     passwordConfirm,
+    role,
   });
 
   if (req.user) {
@@ -216,4 +225,10 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   //4) Log user in, send JWT
   createSendToken(user, 200, res);
+});
+
+exports.setCompany = catchAsync(async (req, res, next) => {
+  req.role = 'company';
+
+  next();
 });

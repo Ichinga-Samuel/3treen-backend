@@ -16,6 +16,12 @@ router.post(
   authController.signup
 );
 
+router.post(
+  '/signUpAsCompany',
+  authController.setCompany,
+  authController.signup
+);
+
 //route for password reset
 router.patch('/resetPassword/:token', authController.resetPassword);
 

@@ -1,6 +1,7 @@
 const Order = require('../models/orderModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const OrderNotification = require('../models/orderNotModel');
 
 module.exports = () =>
   catchAsync(async (req, res, next) => {
@@ -10,7 +11,9 @@ module.exports = () =>
     //Check if the users match
     const order = await Order.findById(id);
 
-    if (['Pending', 'Completed', 'Refunded', 'Onhold'].includes(status)) {
+    if (
+      ['Pending Payment', 'Completed', 'Refunded', 'Onhold'].includes(status)
+    ) {
       if (req.user.role !== 'admin') {
         return next(new AppError(`Only admins can do this!`, 403));
       }
@@ -30,8 +33,15 @@ module.exports = () =>
       }
     );
 
+    const message = `Order status has been changed from ${order.status} to ${updatedOrder.status}`;
+
+    const notification = await OrderNotification.create({
+      message,
+    });
+
     res.status(200).json({
       status: 'success',
       updatedOrder,
+      notification,
     });
   });
