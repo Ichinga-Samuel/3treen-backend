@@ -66,7 +66,10 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
 exports.getAllProducts = factory.getAll(Product);
 
-exports.getSingleProduct = factory.getOne(Product);
+exports.getSingleProduct = factory.getOne(Product,
+   { path: 'reviews', populate: 'reviewer', select: ''},
+
+   );
 
 exports.updateProduct = factory.updateOne(Product);
 
