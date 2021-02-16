@@ -85,11 +85,11 @@ reviewSchema.statics.calcAverageRatings = async (productID)=>{
   };
   // .constructor.calcAverageRatings(this.reviewdProduct)
   //calling the static method using this.constructure.calcAverageRatings() befor reviews is created
-// reviewSchema.post("save",(next)=>{
-//     this.constructor.calcAverageRatings(this.reviewdProduct)
-// })
+reviewSchema.post("save", (next) => {
+    this.constructor.calcAverageRatings(this.reviewdProduct)
+    next()
+})
 
-//review model
-let rewiewdModel = mongoose.model("ProductReview",reviewSchema);
+let rewiewdModel = mongoose.model("ProductReview", reviewSchema);
 
 module.exports = rewiewdModel;
