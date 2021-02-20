@@ -64,14 +64,7 @@ productSchema.virtual("reviews",{
 
 
 
-// productSchema.pre(/^find/,(next)=>{
-//   this.virtual("review",{
-//     ref:"ProductReview",
-//      foreignField:'reviewdProduct',
-//       localField: '_id'
-//   });
-//   next()
-// })
+
 
 
 module.exports = mongoose.model('Product', productSchema);

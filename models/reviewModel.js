@@ -44,24 +44,21 @@ const reviewSchema = mongoose.Schema({
   }
 )
 
-reviewSchema.index({reviewdProduct:1,reviewer:1},{uniquer:true})
-
 reviewSchema.pre(/^find/, function (next) {
 
   this.populate({
-    path: 'user',
-    select: 'name photo',
+    path: 'reviewer',
+    select: 'fullName photo _id',
   });
-
-  next();
+  next()
 });
 
-reviewSchema.statics.calcAverageRatings = async (productID)=>{
+reviewSchema.statics.calcAverageRatings = async function(productID){
     // In Static Methods the "this" keyword points to the current model, in the case (The Review Model)
     const stats = await this.aggregate([
       // The Aggregate method always returns a promise
       {
-        $match: { reviewdProduct: productID },
+        $match: {reviewdProduct: productID },
       },
       {
         $group: {
@@ -71,6 +68,7 @@ reviewSchema.statics.calcAverageRatings = async (productID)=>{
         },
       },
     ]);
+
     if (stats.length > 0) {
       await productModel.findByIdAndUpdate(productID, {
         avrageRating: stats[0].avgRating,
@@ -83,11 +81,12 @@ reviewSchema.statics.calcAverageRatings = async (productID)=>{
       });
     }
   };
-  // .constructor.calcAverageRatings(this.reviewdProduct)
+
+
+
   //calling the static method using this.constructure.calcAverageRatings() befor reviews is created
-reviewSchema.post("save", (next) => {
-    this.constructor.calcAverageRatings(this.reviewdProduct)
-    next()
+reviewSchema.post("save", function(next){
+  this.constructor.calcAverageRatings(this.reviewdProduct._id)
 })
 
 let rewiewdModel = mongoose.model("ProductReview", reviewSchema);
