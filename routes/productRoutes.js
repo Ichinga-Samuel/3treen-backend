@@ -3,6 +3,7 @@ const router = express.Router();
 
 const productController = require('../controllers/productController');
 const authController = require('../controllers/authController');
+const productViews = require('../middlewares/prodViewMiddleware');
 
 router
   .route('/')
@@ -11,7 +12,11 @@ router
 
 router
   .route('/:id')
-  .get(productController.getSingleProduct)
+  .get(
+    authController.protect,
+    productViews.handleView,
+    productController.getSingleProduct
+  )
   .patch(
     authController.protect,
     productController.uploadProductImages,

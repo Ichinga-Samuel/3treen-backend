@@ -5,6 +5,17 @@ const productSchema = mongoose.Schema({
 
   price: { type: Number, required: true },
 
+  uploader: {
+    type: mongoose.Schema.ObjectId,
+    // required: [true, 'A product must have an uploader'],
+    ref: 'User',
+  },
+
+  numViews: {
+    type: Number,
+    default: 0,
+  },
+
   images: [String],
 
   description: {
