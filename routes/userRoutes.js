@@ -16,8 +16,11 @@ router.post(
   authController.signup
 );
 
+//confirm password reset code
+router.post("/confirmCode/:code", authController.confirmResetCode)
+
 //route for password reset
-router.patch('/resetPassword/:token', authController.resetPassword);
+router.patch('/resetPassword', authController.resetPassword);
 
 //route for forgot password
 router.post('/forgotPassword', authController.forgotPassword);
