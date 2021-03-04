@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { bool } = require('sharp');
 const Product = require('./productModel');
 
 const cartItemShema = mongoose.Schema({
@@ -21,6 +22,23 @@ const cartItemShema = mongoose.Schema({
     type: Number,
     default: 1,
   },
+
+  ordered: {
+    type: Boolean,
+    default: false,
+  },
+
+  productUploader: {
+    type: String,
+  },
+
+  totalPrice: {
+    type: Number,
+  },
+
+  datePurchased: {
+    type: Date,
+  },
 });
 
 //DOCUMENT MIDDLEWARE
@@ -28,7 +46,8 @@ cartItemShema.pre('save', async function (next) {
   //the "this" keyword points to the current document
   const product = await Product.findById(this.productId);
   this.product = product;
-  this.productId = undefined;
+  this.productUploader = this.product.uploader;
+  this.totalPrice = this.product.price * this.quantity;
   next();
 });
 

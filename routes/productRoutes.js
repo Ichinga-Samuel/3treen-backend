@@ -8,7 +8,15 @@ const productViews = require('../middlewares/prodViewMiddleware');
 router
   .route('/')
   .get(productController.getAllProducts)
-  .post(productController.createProduct);
+  .post(
+    authController.protect,
+    productViews.setUploader,
+    productController.createProduct
+  );
+
+router
+  .route('/vendorStats')
+  .get(authController.protect, productController.vendorStats);
 
 router
   .route('/:id')

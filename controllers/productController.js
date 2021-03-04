@@ -6,7 +6,8 @@ const factory = require('../controllers/handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const Category = require('../models/categoryModel');
-const APIFeatures = require('../utils/apiFeatures');
+const productView = require('../models/productViewModel');
+const CartItem = require('../models/cartItemModel');
 
 const multerStorage = multer.memoryStorage();
 
@@ -72,3 +73,64 @@ exports.getSingleProduct = factory.getOne(Product);
 exports.updateProduct = factory.updateOne(Product);
 
 exports.deleteProduct = factory.deleteOne(Product);
+
+exports.vendorStats = catchAsync(async (req, res, next) => {
+  const viewStats = await productView.aggregate([
+    {
+      $match: { uploaderId: req.user.id },
+    },
+
+    {
+      $group: {
+        _id: '$uploaderId',
+        numViews: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const ratingStats = await CartItem.aggregate([
+    {
+      $match: { productUploader: req.user.id, ordered: true },
+    },
+
+    {
+      $group: {
+        _id: { $month: '$datePurchased' },
+        productsSold: { $sum: 1 },
+        monthEarnings: { $sum: '$totalPrice' },
+      },
+    },
+  ]);
+
+  const productCount = await CartItem.aggregate([
+    {
+      $match: { productUploader: req.user.id, ordered: true },
+    },
+    {
+      $group: {
+        _id: '$productId',
+        numQuantity: { $sum: '$quantity' },
+      },
+    },
+
+    {
+      $sort: { numQuantity: -1 },
+    },
+
+    {
+      $limit: 3,
+    },
+  ]);
+
+  const grossEarnings = ratingStats
+    .map((el) => el.monthEarnings)
+    .reduce((a, b) => a + b);
+
+  res.status(200).json({
+    status: 'success',
+    viewStats,
+    ratingStats,
+    grossEarnings,
+    productCount,
+  });
+});

@@ -14,6 +14,17 @@ const productViewSchema = mongoose.Schema({
     ref: 'User',
   },
 
+  productUploader: {
+    type: mongoose.Schema.ObjectId,
+    required: [true, 'A product view must have an uploader'],
+    ref: 'User',
+  },
+
+  uploaderId: {
+    type: String,
+    ref: 'User',
+  },
+
   timeStamp: {
     type: Date,
     default: Date.now(),
@@ -44,6 +55,12 @@ productViewSchema.statics.calcViews = async function (productId) {
     });
   }
 };
+
+productViewSchema.pre('save', function (next) {
+  this.uploaderId = this.productUploader;
+  this.productUploader = undefined;
+  next();
+});
 
 productViewSchema.post('save', function () {
   this.constructor.calcViews(this.product);
