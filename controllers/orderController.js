@@ -14,9 +14,8 @@ exports.getAllOrders = factory.getAll(Order);
 exports.getSingleOrder = factory.getOne(Order);
 
 exports.createOrder = catchAsync(async (req, res, next) => {
-  console.log(process.env.PAYSTACK_SECRET_KEY);
   //Fetch cart items with that user id in their field
-  const products = await CartItem.find({ user: req.user.id });
+  const products = await CartItem.find({ user: req.user, ordered: false });
 
   if (products.length < 1)
     return next(new AppError('You have nothing in your cart', 401));
@@ -59,7 +58,6 @@ exports.createOrder = catchAsync(async (req, res, next) => {
   await order.updateOne({
     paystack: session.data,
   });
-  // Initialize the flutterwave class
 
   res.status(200).json({
     status: 'success',

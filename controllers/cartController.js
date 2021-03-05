@@ -23,12 +23,24 @@ exports.addToCart = catchAsync(async (req, res, next) => {
   //Get Product Id from params
   const { productId } = req.params;
 
-  //Create Cart Item
-  const cartItem = await CartItem.create({
-    user: req.user.id,
-    productId,
-    quantity: req.body.quantity,
-  });
+  //Check if cart contains that item, if so increase quantity
+  const item = await CartItem.find({ user: req.user.id, productId });
+
+  let cartItem;
+
+  if (item.length > 0) {
+    const newQuantity = item[0].quantity + 1;
+
+    item[0].quantity = newQuantity;
+    await item[0].save();
+  } else {
+    //Create Cart Item
+    cartItem = await CartItem.create({
+      user: req.user.id,
+      productId,
+      quantity: req.body.quantity,
+    });
+  }
 
   res.status(200).json({
     status: 'success',
