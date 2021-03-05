@@ -49,6 +49,12 @@ const orderSchema = mongoose.Schema({
   deliveryCode: {
     type: String,
   },
+
+  paystack: {
+    authorization_url: String,
+    access_code: String,
+    reference: String,
+  },
 });
 
 //DOCUMENT MIDDLEWARE

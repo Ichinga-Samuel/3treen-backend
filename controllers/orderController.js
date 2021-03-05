@@ -1,5 +1,6 @@
-const flutterwave = require('../utils/flutterwave');
-
+const paystack = require('paystack-api')(
+  'sk_test_99befe14e54b94b52bb13d65a40bfed88595d74b'
+);
 const Order = require('../models/orderModel');
 const CartItem = require('../models/cartItemModel');
 
@@ -13,6 +14,7 @@ exports.getAllOrders = factory.getAll(Order);
 exports.getSingleOrder = factory.getOne(Order);
 
 exports.createOrder = catchAsync(async (req, res, next) => {
+  console.log(process.env.PAYSTACK_SECRET_KEY);
   //Fetch cart items with that user id in their field
   const products = await CartItem.find({ user: req.user.id });
 
@@ -39,51 +41,51 @@ exports.createOrder = catchAsync(async (req, res, next) => {
   );
 
   //Payment
-  // Initialize the flutterwave class
-  const Ravepay = require('flutterwave-node');
-
-  const rave = new Ravepay(
-    process.env.PUBLICK_KEY,
-    process.env.SECRET_KEY,
-    true
-  );
-
-  rave.Card.charge({
-    cardno: req.body.cardno,
-    cvv: req.body.cvv,
-    expirymonth: req.body.expirymonth,
-    expiryyear: req.body.expiryyear,
-    currency: 'NGN',
-    country: 'NG',
-    amount: order.totalCost,
+  // 2) Create checkout session
+  const session = await paystack.transaction.initialize({
+    amount: parseInt(order.totalCost) * 100,
     email: req.user.email,
-    phonenumber: req.user.phoneNumber,
-    firstname: 'Ceder',
-    lastname: 'Daniel',
-    IP: '355426087298442',
-    txRef: 'MC-' + Date.now(), // your unique merchant reference
-    meta: [{ metaname: 'flightID', metavalue: '123949494DC' }],
-    redirect_url: 'https://rave-webhook.herokuapp.com/receivepayment',
-    device_fingerprint: '69e6b7f0b72037aa8428b70fbe03986c',
-  })
-    .then((resp) => {
-      console.log(resp.body);
+    metadata: JSON.stringify({
+      custom_fields: [
+        {
+          name: `${req.user.fullName}`,
+          orderID: `${order._id}`,
+        },
+      ],
+    }),
+    channels: ['card', 'bank'],
+  });
 
-      rave.Card.validate({
-        transaction_reference: resp.body.data.flwRef,
-        otp: 12345,
-      }).then((response) => {
-        console.log(response.body.data.tx);
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  await order.updateOne({
+    paystack: session.data,
+  });
+  // Initialize the flutterwave class
 
   res.status(200).json({
     status: 'success',
     order,
     products,
+    payment: session,
+  });
+});
+
+exports.verifyPayment = catchAsync(async (req, res, next) => {
+  // 1) Find Shipping Order From Database
+  const order = await Order.findById(req.params.orderID);
+
+  // 3) Verify if the payment was successful
+  const paymentStatus = await paystack.transaction.verify({
+    reference: order.paystack.reference,
+  });
+  if (paymentStatus.data.status === 'success') {
+    await order.updateOne({ status: 'Completed' });
+  }
+  res.status(200).json({
+    status: paymentStatus.status,
+    message: paymentStatus.message,
+    data: {
+      data: paymentStatus.data,
+    },
   });
 });
 
