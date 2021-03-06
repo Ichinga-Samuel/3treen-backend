@@ -3,7 +3,7 @@ const { promisify } = require('util');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const signToken = require('../utils/signToken');
-const sendEmail = require('../utils/email');
+const Email = require('../utils/email');
 const User = require('../models/userModel');
 const crypto = require('crypto');
 const Referral = require('../models/referralModel');
@@ -48,13 +48,15 @@ exports.signup = catchAsync(async (req, res, next) => {
     });
   }
 
+  const url = `${req.protocol}://${req.get('host')}/me`;
+
+  await new Email(newUser, url).sendWelcome();
   createSendToken(newUser, 201, res);
 });
 
 //Code for user login
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  // console.log(email, password);
 
   //1) check if email or password was passed in
   if (!email || !password) {
@@ -125,7 +127,6 @@ exports.accessControl = catchAsync(async (req, res, next) => {
   if (req.user.role !== 'admin') {
     return next(new AppError('Only Admins can do this', 403));
   }
-  console.log('access control');
 
   next();
 });
@@ -137,8 +138,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     .createHash('sha256')
     .update(req.params.token)
     .digest('hex');
-
-  console.log(hashedToken);
 
   const user = await User.findOne({
     passwordResetToken: hashedToken,
@@ -173,23 +172,17 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 
   //2) Generate the random restet token
-  const resetToken = user.createPassswordResetToken();
+  const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
 
   //3) Send it back as an email
-  const resetURL = `${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/users/resetPassword/${resetToken}`;
 
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget, please ignore this email!`;
-
-  //Actually send email
   try {
-    await sendEmail({
-      email: user.email,
-      subject: 'Your password reset token (Valid only for 10 min)',
-      message,
-    });
+    const resetURL = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/users/resetPassword/${resetToken}`;
+
+    await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({
       status: 'success',

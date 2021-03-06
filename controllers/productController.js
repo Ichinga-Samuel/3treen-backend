@@ -24,8 +24,6 @@ const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 exports.uploadProductImages = upload.array('images', 5);
 
 exports.resizeProductImages = catchAsync(async (req, res, next) => {
-  console.log(req.files);
-
   if (!req.files) return next();
 
   req.body.images = [];

@@ -23,11 +23,12 @@ exports.addToCart = catchAsync(async (req, res, next) => {
   //Get Product Id from params
   const { productId } = req.params;
 
-  //Check if cart contains that item, if so increase quantity
+  //Check if cart Item exists
   const item = await CartItem.find({ user: req.user.id, productId });
 
   let cartItem;
 
+  //Check if cart contains that item, if so increase quantity
   if (item.length > 0) {
     const newQuantity = item[0].quantity + 1;
 
