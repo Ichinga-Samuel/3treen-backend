@@ -21,7 +21,7 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 //Code for user signup
-exports.signup = catchAsync(async (req, res, next) => {
+exports.signup = /*catchAsync(*/async (req, res, next) => {
   const userData = { ...req.body };
 
   const { fullName, email, password, passwordConfirm } = userData;
@@ -31,6 +31,13 @@ exports.signup = catchAsync(async (req, res, next) => {
     role = req.role;
   } else {
     role = 'user';
+  }
+  const userExists = await User.exists({ email });
+
+  if(userExists){
+    return res.status(400).json({
+      message: "User already exists"
+    });
   }
 
   const newUser = await User.create({
@@ -52,7 +59,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   await new Email(newUser, url).sendWelcome();
   createSendToken(newUser, 201, res);
-});
+}//);
 
 //Code for user login
 exports.login = catchAsync(async (req, res, next) => {
