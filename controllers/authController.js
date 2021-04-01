@@ -21,7 +21,7 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 //Code for user signup
-exports.signup = /*catchAsync(*/async (req, res, next) => {
+exports.signup = catchAsync(async (req, res, next) => {
   const userData = { ...req.body };
 
   const { fullName, email, password, passwordConfirm } = userData;
@@ -59,7 +59,7 @@ exports.signup = /*catchAsync(*/async (req, res, next) => {
 
   await new Email(newUser, url).sendWelcome();
   createSendToken(newUser, 201, res);
-}//);
+});
 
 //Code for user login
 exports.login = catchAsync(async (req, res, next) => {
