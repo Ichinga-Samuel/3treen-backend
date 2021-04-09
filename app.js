@@ -12,6 +12,8 @@ const cartRouter = require('./routes/cartRoutes');
 const categoryRouter = require('./routes/categoryRoutes');
 const messageRouter = require('./routes/messageRoutes');
 const referralRouter = require('./routes/referralRoutes');
+const reviewRoute = require('./routes/reviewRoutes');
+const seachRouter = require("./routes/searchRoutes")
 
 //Body parser
 app.use(express.json({ limit: '10kb' }));
@@ -29,6 +31,8 @@ app.use('/api/v1/cart', cartRouter);
 app.use('/api/v1/category', categoryRouter);
 app.use('/api/v1/messages', messageRouter);
 app.use('/api/v1/referrals', referralRouter);
+app.use('/api/v1/review', reviewRoute);
+app.use('/api/v1/search',seachRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

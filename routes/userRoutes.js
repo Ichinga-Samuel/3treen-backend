@@ -16,14 +16,19 @@ router.post(
   authController.signup
 );
 
+<<<<<<< HEAD
 router.post(
   '/signUpAsCompany',
   authController.setCompany,
   authController.signup
 );
+=======
+//confirm password reset code
+router.post("/confirmCode/:code", authController.confirmResetCode)
+>>>>>>> review-service2
 
 //route for password reset
-router.patch('/resetPassword/:token', authController.resetPassword);
+router.patch('/resetPassword', authController.resetPassword);
 
 //route for forgot password
 router.post('/forgotPassword', authController.forgotPassword);
