@@ -18,6 +18,6 @@ router
     productController.resizeProductImages,
     productController.updateProduct
   )
-  .delete(productController.deleteProduct);
+  .delete(authController.protect,productController.deleteProduct);
 
 module.exports = router;
