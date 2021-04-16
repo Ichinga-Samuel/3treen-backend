@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const compression = require('compression');
+const bodyParser = require('body-parser');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -13,12 +15,14 @@ const messageRouter = require('./routes/messageRoutes');
 const referralRouter = require('./routes/referralRoutes');
 
 //Body parser
-app.use(express.json({ limit: '10kb' }));
+app.use(express.json());
 
 //Serve static file
 app.use(express.static('public'));
 
 app.use(compression());
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 //ROUTES
 app.use('/api/v1/users', userRouter);
