@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+const dotenv = require('dotenv').config({ path: './config.env' });;
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
@@ -8,9 +8,11 @@ const config = require('./config/config');
 const app = require('./app');
 
 //Connecting to the database
-dotenv.config({ path: './config.env' });
 
-const DB = process.env.DATABASE_LOCAL;
+let DB = "mongodb://localhost:27017/3Green";
+if(process.env.NODE_ENV === "production"){
+  DB = process.env.DB_URL;
+}
 
 mongoose
   .connect(DB, {

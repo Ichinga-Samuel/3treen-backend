@@ -65,11 +65,11 @@ module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
 
-  if (process.env.NODE_ENV.trim() === 'development') {
+  if (process.env.NODE_ENV !== 'production') {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV.trim() === 'production') {
     let error = { ...err };
-    console.log(error);
+
     if (error.kind === 'ObjectId') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
     if (error.name === 'ValidationError')

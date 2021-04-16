@@ -2,26 +2,28 @@ const nodemailer = require('nodemailer');
 const htmlToText = require('html-to-text');
 const pug = require('pug');
 
+const { DEV_MAIL_USER, DEV_MAIL_PORT, DEV_MAIL_PASS, DEV_MAIL_HOST } = process.env;
+
 module.exports = class Email {
   constructor(user, url) {
     this.to = user.email;
     this.firstName = user.fullName.split(' ')[0];
     this.url = url;
-    this.from = `Cedar Daniel <${process.env.EMAIL_FROM}>`;
+    this.from = `Cedar Daniel <${(process.env.NODE_ENV !== "production")? process.env.DEV_MAIL_USER: process.env.EMAIL_USERNAME}>`;
   }
 
   newTransport() {
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV !== 'production') { 
       // Sendgrid
       return nodemailer.createTransport({
-        service: 'SendGrid',
+        host: DEV_MAIL_HOST,
+        port: DEV_MAIL_PORT,
         auth: {
-          user: process.env.SENDGRID_USERNAME,
-          pass: process.env.SENDGRID_PASSWORD,
+          user: DEV_MAIL_USER,
+          pass: DEV_MAIL_PASS,
         },
       });
     }
-
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: process.env.EMAIL_PORT,
