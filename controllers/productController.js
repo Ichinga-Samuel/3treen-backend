@@ -1,4 +1,5 @@
-const multer = require('multer');
+const upload = require('../utils/multer');
+// const cloudinary = require('cloudinary');
 const sharp = require('sharp');
 
 const Product = require('../models/productModel');
@@ -8,18 +9,16 @@ const AppError = require('../utils/appError');
 const Category = require('../models/categoryModel');
 const productView = require('../models/productViewModel');
 const CartItem = require('../models/cartItemModel');
+const cloudinary = require('cloudinary').v2;
+const dotenv = require('dotenv');
 
-const multerStorage = multer.memoryStorage();
+dotenv.config();
 
-const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true);
-  } else {
-    cb(new AppError('Not an image! Please upload only images', 400), false);
-  }
-};
-
-const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+cloudinary.config({
+  cloud_name: 'dkp7wyq3t',
+  api_key: '717919858528439',
+  api_secret: 'GIsuXggJl24w6_Ab2wbqX6x2hcc',
+});
 
 exports.uploadProductImages = upload.array('images', 5);
 
@@ -46,6 +45,7 @@ exports.resizeProductImages = catchAsync(async (req, res, next) => {
 });
 
 exports.createProduct = catchAsync(async (req, res, next) => {
+  console.log(process.env.CLOUDINARY_API_KEY);
   //Get category from request body
   const { category } = req.body;
 
@@ -55,6 +55,27 @@ exports.createProduct = catchAsync(async (req, res, next) => {
   //If it doesn't exist throw error
   if (categoryCheck.length < 1)
     return next(new AppError('DB does not contain category specified', 404));
+
+  const { files } = req;
+
+  const images = [];
+  let imageUrls;
+
+  try {
+    for (file of files) {
+      const { path } = file;
+      const newPath = await cloudinary.uploader.upload(path);
+      images.push(newPath);
+    }
+    imageUrls = images.map((el) => el.secure_url);
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      error,
+    });
+  }
+  // Add Images array to request body
+  req.body.images = imageUrls;
 
   const product = await Product.create(req.body);
 

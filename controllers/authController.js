@@ -36,9 +36,9 @@ exports.signup = catchAsync(async (req, res, next) => {
   // check if user with the same email allready exit
   const userExists = await User.exists({ email });
 
-  if(userExists){
+  if (userExists) {
     return res.status(400).json({
-      message: "User already exists"
+      message: 'User already exists',
     });
   }
 
@@ -94,10 +94,11 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   // //1) Getting token and check if its there
-  
+
   let token;
   if (
-    req.headers.authorization  && req.headers.authorization.startsWith('Bearer')
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
   ) {
     // console.log(req.headers.authorization)
     //token = req.headers.authorization.slice(6)
@@ -144,29 +145,28 @@ exports.accessControl = catchAsync(async (req, res, next) => {
 });
 
 //Code to reset User password
-exports.resetPassword = catchAsync(async (req, res, next) => {
-  //1) Get user based on the token
-  const hashedToken = crypto
-    .createHash('sha256')
-    .update(req.params.token)
-    .digest('hex');
+// exports.resetPassword = catchAsync(async (req, res, next) => {
+//   //1) Get user based on the token
+//   const hashedToken = crypto
+//     .createHash('sha256')
+//     .update(req.params.token)
+//     .digest('hex');
 
-  const user = await User.findOne({
-    passwordResetCode: req.params.code,
-    passwordResetExpires: { $gt: Date.now() }
-  });
+//   const user = await User.findOne({
+//     passwordResetCode: req.params.code,
+//     passwordResetExpires: { $gt: Date.now() },
+//   });
 
-  //2) If token  has not expired, and there is user, set new password
-  if (!user) {
-    return next(new AppError('Reset code is invalid or has  expired', 400));
-  }
+//   //2) If token  has not expired, and there is user, set new password
+//   if (!user) {
+//     return next(new AppError('Reset code is invalid or has  expired', 400));
+//   }
 
-  res.status(200).json({
-    status:"success",
-    message:"Reset code is valid"
-  })
-})
-
+//   res.status(200).json({
+//     status: 'success',
+//     message: 'Reset code is valid',
+//   });
+// });
 
 
 //Code for forgot password
@@ -203,13 +203,12 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       status: 'success',
       message: 'Code has been sent to your mail\n check your inbox',
     });
-
   } catch (error) {
-    if(error){  
+    if (error) {
       user.createPassswordResetCode = undefined;
       user.passwordResetExpires = undefined;
       await user.save({ validateBeforeSave: false });
-  
+
       return next(
         new AppError(
           'There was an error sending the email. Try again later!',
