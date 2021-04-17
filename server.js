@@ -9,7 +9,7 @@ const app = require('./app');
 
 //Connecting to the database
 
-let DB = "mongodb://localhost:27017/3Green";
+let DB = process.env.DATABASE_LOCAL // "mongodb://localhost:27017/3Green";
 if(process.env.NODE_ENV === "production"){
   DB = process.env.DB_URL;
 }

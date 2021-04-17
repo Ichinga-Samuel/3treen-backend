@@ -16,31 +16,37 @@ router.post(
   authController.signup
 );
 
-<<<<<<< HEAD
+// <<<<<<< HEAD
+//signUp route for company owner
 router.post(
   '/signUpAsCompany',
   authController.setCompany,
   authController.signup
 );
-=======
+
+// =======
 //confirm password reset code
 router.post("/confirmCode/:code", authController.confirmResetCode)
->>>>>>> review-service2
+// >>>>>>> review-service2
 
 //route for password reset
-router.patch('/resetPassword', authController.resetPassword);
+router.patch('/resetPassword/:code', authController.resetPassword);
 
 //route for forgot password
 router.post('/forgotPassword', authController.forgotPassword);
 
+//update password
 router.patch(
   '/updateMyPassword',
   authController.protect,
   authController.updatePassword
 );
 
+//Get all users with the Rule:SR
 router.route('/salesRep').get(userController.getSalesRep);
 
+
+//
 router.get(
   '/me',
   authController.protect,
