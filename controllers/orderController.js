@@ -35,7 +35,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
 
   //Update cart items whose user field matches the current user id
   await CartItem.updateMany(
-    { ordered: false },
+    { user: req.user, ordered: false },
     { $set: { ordered: true, datePurchased: Date.now() } }
   );
 

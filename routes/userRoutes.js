@@ -16,16 +16,13 @@ router.post(
   authController.signup
 );
 
-<<<<<<< HEAD
 router.post(
   '/signUpAsCompany',
   authController.setCompany,
   authController.signup
 );
-=======
 //confirm password reset code
-router.post("/confirmCode/:code", authController.confirmResetCode)
->>>>>>> review-service2
+// router.post("/confirmCode/:code", authController.confirmResetCode)
 
 //route for password reset
 router.patch('/resetPassword', authController.resetPassword);
