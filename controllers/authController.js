@@ -7,6 +7,7 @@ const Email = require('../utils/email');
 const User = require('../models/userModel');
 const crypto = require('crypto');
 const Referral = require('../models/referralModel');
+const Whatsapp = require("../utils/whatsapp")
 
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
@@ -58,8 +59,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     });
   }
   
-  const url = `${req.protocol}://${req.get('host')}/me`;
-  await new Email(newUser, url).sendWelcome();
+  // const url = `${req.protocol}://${req.get('host')}/me`;
+  await new Email(newUser).sendWelcome();
 
   createSendToken(newUser, 201, res);
 });
@@ -186,13 +187,17 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   try {
 
     //2) Generate the random restet CODE
-  
     const resetCode =  Math.floor(1000 + Math.random()*9000);
+    
     // const resetURL = `${req.protocol}://${req.get(
     //   'host'
     // )}/api/v1/users/resetPassword/${resetToken}`;
 
-    await new Email(user,"noUrl",resetCode).sendPasswordReset();
+    //send reset code through email
+    await new Email(user,resetCode).sendPasswordReset();
+
+    //send reset code through whatsapp
+    await new Whatsapp(user.homePhone,resetCode).sendMessage();
 
     user.passwordResetCode = resetCode;
     user.passwordRE = Date.now()+ 60*10000;
@@ -246,7 +251,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   const {code} = req.params
   const { password, passwordConfirm } = req.body;
   const mainUser =  await User.findOne({passwordResetCode:code})
-
   if(mainUser){
     
     if(passwordConfirm && password){
@@ -265,6 +269,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   }else{
     return next(new AppError("Error #U404R: sorry somthing went wrong, if this contenue pls contact the customer care",400))
   }
+ 
     
 });
 

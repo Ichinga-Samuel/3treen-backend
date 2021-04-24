@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
-const htmlToText = require('html-to-text');
-const pug = require('pug');
+// const htmlToText = require('html-to-text');
+// const pug = require('pug');
 const fs = require("fs");
 
 const { DEV_MAIL_USER, DEV_MAIL_PORT, DEV_MAIL_PASS, DEV_MAIL_HOST } = process.env;
@@ -8,11 +8,10 @@ const { DEV_MAIL_USER, DEV_MAIL_PORT, DEV_MAIL_PASS, DEV_MAIL_HOST } = process.e
 
 
 module.exports = class Email {
-  constructor(user, url, resetCode = 1234) {
+  constructor(user,resetCode = 1234) {
     this.to = user.email;
     this.firstName = user.fullName.split(' ')[0];
-    this.url = url;
-    this.from = `${(process.env.NODE_ENV !== "production")? process.env.DEV_MAIL_USER : process.env.EMAIL_USERNAME}`;
+    this.from = `${(process.env.NODE_ENV !== "production")? DEV_MAIL_USER : process.env.EMAIL_USERNAME}`;
     this.resetCode = resetCode;
   }
 
@@ -30,26 +29,25 @@ module.exports = class Email {
   }
 
   newTransport() {
-    const {DEV_MAIL_HOST,DEV_MAIL_PORT,DEV_MAIL_USER,DEV_MAIL_PASS} = process.env
     if (process.env.NODE_ENV !== 'production') { 
       // Sendgrid
-      return  nodemailer.createTransport({
+      return(nodemailer.createTransport({
         host:DEV_MAIL_HOST,
         port: DEV_MAIL_PORT,
         auth: {
           user: DEV_MAIL_USER,
           pass: DEV_MAIL_PASS
         }
-      });
+      }));
     }else{
-      return nodemailer.createTransport({
+      return(nodemailer.createTransport({
         host:process.env.EMAIL_HOST,
         port: process.env.EMAIL_PORT,
         auth: {
           user: process.env.EMAIL_USERNAME,
           pass:process.env.EMAIL_PASSWORD
         }
-      });
+      }));
     }
   }
  
@@ -79,57 +77,56 @@ module.exports = class Email {
 
 
 async send(subject){
-  try {
-      // 1) rendering html
-      let htmlTxt = await this.readFilePro(`${__dirname}/../views/html/welcom.html`)
-      // 2) replacing the parameters with real values
-      let setFirstName = htmlTxt.replace(/{%USERNAME%}/g,this.firstName)
-      let setCode = setFirstName.replace(/{%HOMEPAGE%}/g,process.env.TREEN_CLIENT)
-      console.log(setCode)
-      // 3) Define email options
-    const mailOptions1 = {
-      from: this.from,
-      to: this.to,
-      subject,
-      html:setCode,
-      text:"Reset Password Code"
-    };
+  // 1) rendering html
+  let htmlTxt = await this.readFilePro(`${__dirname}/../views/html/welcom.html`)
 
-    // 4) Create a transport and send email
-    await this.newTransport().sendMail(mailOptions1);
-  } catch (error) {
-    throw new Error(error)
-  }
+
+  // 2) replacing the parameters with real values
+  let setFirstName = htmlTxt.replace(/{%USERNAME%}/g,this.firstName)
+  let setCode = setFirstName.replace(/{%HOMEPAGE%}/g,process.env.TREEN_CLIENT)
+  console.log(setCode)
+
+
+  // 3) Define email options
+const mailOptions1 = {
+  from: this.from,
+  to: this.to,
+  subject,
+  html:setCode,
+  text:"Reset Password Code"
+};
+
+// 4) Create a transport and send email
+await this.newTransport().sendMail(mailOptions1);
+
+ 
 }
 
 
   //send email for password reset code
   async send2(subject){
+    // 1) rendering html
+    let htmlTxt = await this.readFilePro(`${__dirname}/../views/html/resetCode.html`)
 
-    try {
-        // 1) rendering html
-        let htmlTxt = await this.readFilePro(`${__dirname}/../views/html/resetCode.html`)
-        // 2) replacing the parameters with real values
-        let setFirstName = htmlTxt.replace(/{%HOMEPAGE%}/g,process.env.TREEN_CLIENT)
-        let setFirstName2 = setFirstName.replace(/{%USERNAME%}/g,this.firstName)
-        let setCode = setFirstName2.replace(/{%RESETCODE%}/g,this.resetCode)
-        console.log(setCode)
-        // 3) Define email options
-      const mailOptions = {
-        from: this.from,
-        to: this.to,
-        subject,
-        html:setCode,
-        text:"Reset Password Code"
-      };
 
-      // 4) Create a transport and send email
-      await this.newTransport().sendMail(mailOptions);
-      
-    } catch (error) {
-      console.log(error)
-      throw new Error(error)
-    }
+    // 2) replacing the parameters with real values
+    let setFirstName = htmlTxt.replace(/{%HOMEPAGE%}/g,process.env.TREEN_CLIENT)
+    let setFirstName2 = setFirstName.replace(/{%USERNAME%}/g,this.firstName)
+    let setCode = setFirstName2.replace(/{%RESETCODE%}/g,this.resetCode)
+    // console.log(setCode)
+
+    
+    // 3) Define email options
+  const mailOptions = {
+    from: this.from,
+    to: this.to,
+    subject,
+    html:setCode,
+    text:"Reset Password Code"
+  };
+
+  // 4) Create a transport and send email
+  await this.newTransport().sendMail(mailOptions);
   }
 
   async sendWelcome() {
