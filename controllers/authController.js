@@ -197,7 +197,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     await new Email(user,resetCode).sendPasswordReset();
 
     //send reset code through whatsapp
-    await new Whatsapp(user.homePhone,resetCode).sendMessage();
+    if(user.homePhone){
+      await new Whatsapp(user.homePhone,resetCode).sendMessage();
+    }
 
     user.passwordResetCode = resetCode;
     user.passwordRE = Date.now()+ 60*10000;
