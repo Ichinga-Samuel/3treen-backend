@@ -1,6 +1,7 @@
 const compression = require('compression');
 const express = require('express');
 const app = express();
+const cors = require('cors')
 const bodyParser = require('body-parser');
 
 const AppError = require('./utils/appError');
@@ -15,6 +16,7 @@ const messageRouter = require('./routes/messageRoutes');
 const referralRouter = require('./routes/referralRoutes');
 const reviewRoute = require('./routes/reviewRoutes');
 const seachRouter = require("./routes/searchRoutes")
+const paymentRouter = require("./routes/paymentRoutes");
 
 //Body parser
 app.use(express.json());
@@ -26,6 +28,9 @@ app.use(compression());
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: true }));
 
+// enable cors for all route
+app.use(cors())
+
 //ROUTES
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/products', productRouter);
@@ -36,6 +41,7 @@ app.use('/api/v1/messages', messageRouter);
 app.use('/api/v1/referrals', referralRouter);
 app.use('/api/v1/review', reviewRoute);
 app.use('/api/v1/search',seachRouter);
+app.use('/api/v1/payment',paymentRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

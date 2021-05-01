@@ -1,5 +1,5 @@
-let forge = require('node-forge');
-let axios = require('axios');
+const forge = require('node-forge');
+const axios = require('axios');
 
 class Flutterwave {
   constructor(secretKey, publicKey, encryptKey) {
