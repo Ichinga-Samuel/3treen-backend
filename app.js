@@ -1,9 +1,11 @@
 const compression = require('compression');
 const express = require('express');
+var cors = require('cors');
 const app = express();
-const cors = require('cors')
+// const cors = require('cors')
 const bodyParser = require('body-parser');
 
+app.use(cors());
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
