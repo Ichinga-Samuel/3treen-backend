@@ -11,6 +11,7 @@ router
   .post(
     authController.protect,
     productViews.setUploader,
+    productController.uploadProductImages,
     productController.createProduct
   );
 
