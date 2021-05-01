@@ -16,26 +16,14 @@ router.post(
   authController.signup
 );
 
-<<<<<<< HEAD
-=======
-// <<<<<<< HEAD
-//signUp route for company owner
->>>>>>> e7ebcc0b7665de493126c94767f33c514ac878b3
 router.post(
   '/signUpAsCompany',
   authController.setCompany,
   authController.signup
 );
-<<<<<<< HEAD
-//confirm password reset code
-// router.post("/confirmCode/:code", authController.confirmResetCode)
-=======
 
-// =======
 //confirm password reset code
 router.post("/confirmCode/:code", authController.confirmResetCode)
-// >>>>>>> review-service2
->>>>>>> e7ebcc0b7665de493126c94767f33c514ac878b3
 
 //route for password reset
 router.patch('/resetPassword/:code', authController.resetPassword);
