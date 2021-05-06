@@ -197,8 +197,8 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     await new Email(user,resetCode).sendPasswordReset();
 
     //send reset code through whatsapp
-    if(user.homePhone){
-      await new Whatsapp(user.homePhone,resetCode).sendMessage();
+    if(user.homePhone || user.workPhone){
+      await new Whatsapp((user.homePhone || user.workPhone),resetCode).sendMessage();
     }
 
     user.passwordResetCode = resetCode;
@@ -208,7 +208,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      message: 'Code has been sent to your mail\n check your inbox',
+      message: 'Code has been sent to your Email and WhatsApp\n check your inbox',
     });
   } catch (error) {
     if (error) {
@@ -270,9 +270,8 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     }
   }else{
     return next(new AppError("Error #U404R: sorry somthing went wrong, if this contenue pls contact the customer care",400))
-  }
- 
-    
+  }  
+  
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
