@@ -11,13 +11,15 @@ router
   .post(
     authController.protect,
     productViews.setUploader,
-    productController.uploadProductImages,
     productController.createProduct
   );
 
 router
   .route('/vendorStats')
-  .get(authController.protect, productController.vendorStats);
+  .get(
+    authController.protect,
+    productController.vendorStats
+  );
 
 router
   .route('/:id')
@@ -28,8 +30,6 @@ router
   )
   .patch(
     authController.protect,
-    productController.uploadProductImages,
-    productController.resizeProductImages,
     productController.updateProduct
   )
   .delete(authController.protect,productController.deleteProduct);

@@ -10,15 +10,24 @@ const Category = require('../models/categoryModel');
 const productView = require('../models/productViewModel');
 const CartItem = require('../models/cartItemModel');
 const cloudinary = require('cloudinary').v2;
-const dotenv = require('dotenv');
+// const dotenv = require('dotenv');
+// dotenv.config();
 
-dotenv.config();
+//cloudinary setup
+const {CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_SECRET} = process.env
 
 cloudinary.config({
-  cloud_name: 'dkp7wyq3t',
-  api_key: '717919858528439',
-  api_secret: 'GIsuXggJl24w6_Ab2wbqX6x2hcc',
+  cloud_name: CLOUDINARY_CLOUD_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret:CLOUDINARY_SECRET,
 });
+
+// cloudinary.config({
+//   cloud_name: 'dkp7wyq3t',
+//   api_key: '717919858528439',
+//   api_secret: 'GIsuXggJl24w6_Ab2wbqX6x2hcc',
+
+// });
 
 exports.uploadProductImages = upload.array('images', 5);
 
@@ -54,7 +63,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
   //If it doesn't exist throw error
   if (categoryCheck.length < 1)
-    return next(new AppError('DB does not contain category specified', 404));
+    return next(new AppError('Category not found', 404));
 
   const { files } = req;
 
