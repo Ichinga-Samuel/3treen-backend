@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./server.js"
+    "start": "node ./server.js",
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/3reenshop/3reenshop-api#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cloudinary": "^1.25.1",
@@ -27,6 +29,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "flutterwave-node": "^1.2.2",
+    "flutterwave-node-v3": "^1.0.6",
     "html-to-text": "^7.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.13",

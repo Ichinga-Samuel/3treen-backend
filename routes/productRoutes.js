@@ -26,12 +26,7 @@ router
     productViews.handleView,
     productController.getSingleProduct
   )
-  .patch(
-    authController.protect,
-    productController.uploadProductImages,
-    productController.resizeProductImages,
-    productController.updateProduct
-  )
-  .delete(authController.protect,productController.deleteProduct);
+  .patch(authController.protect, productController.updateProduct)
+  .delete(authController.protect, productController.deleteProduct);
 
 module.exports = router;
