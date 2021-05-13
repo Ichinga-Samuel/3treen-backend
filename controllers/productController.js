@@ -162,3 +162,16 @@ exports.vendorStats = catchAsync(async (req, res, next) => {
     productCount,
   });
 });
+
+// exports.topSellingProducts = catchAsync(async (req, res, next) => {
+//   const products = await CartItem.aggregate([
+//     {
+//       $match: { ordered: true },
+
+//       $group: {
+//         _id: '$productIdString',
+//         numViews: { $sum: 1 },
+//       },
+//     },
+//   ])
+// })

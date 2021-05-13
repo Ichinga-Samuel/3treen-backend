@@ -48,6 +48,7 @@ cartItemShema.pre('save', async function (next) {
   this.product = product;
   this.productUploader = this.product.uploader;
   this.totalPrice = this.product.price * this.quantity;
+  this.productIdString = this.productId;
   next();
 });
 
