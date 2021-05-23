@@ -5,15 +5,12 @@ const productController = require('../controllers/productController');
 const authController = require('../controllers/authController');
 const productViews = require('../middlewares/prodViewMiddleware');
 
-router
-  .route('/')
-  .get(productController.getAllProducts)
-  .post(
-    authController.protect,
-    productViews.setUploader,
-    productController.uploadProductImages,
-    productController.createProduct
-  );
+router.route('/').get(productController.getAllProducts).post(
+  authController.protect,
+
+  productController.uploadProductImages,
+  productController.createProduct
+);
 
 router
   .route('/vendorStats')
