@@ -105,6 +105,8 @@ exports.vendorOrders = catchAsync(async (req, res, next) => {
     productUploader: authUserId,
   });
 
+  console.log(orders);
+
   res.status(200).json({
     status: 'success',
     results: orders.length,

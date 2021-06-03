@@ -24,11 +24,7 @@ router
 
 router
   .route('/:id')
-  .get(
-    authController.protect,
-    productViews.handleView,
-    productController.getSingleProduct
-  )
+  .get(productController.getSingleProduct)
   .patch(authController.protect, productController.updateProduct)
   .delete(authController.protect, productController.deleteProduct);
 
