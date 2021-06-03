@@ -44,6 +44,8 @@ exports.createProduct = catchAsync(async (req, res, next) => {
   // Add Images array to request body
   req.body.images = imageUrls;
 
+  req.body.uploader = req.user.id;
+
   const product = await Product.create(req.body);
 
   res.status(201).json({
