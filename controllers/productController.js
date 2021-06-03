@@ -23,7 +23,6 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     return next(new AppError('Category not found', 404));
 
   const { files } = req;
-  console.log(files);
 
   const images = [];
   let imageUrls;

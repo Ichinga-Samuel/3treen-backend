@@ -15,6 +15,8 @@ router.route('/verifyPayment/:orderID').get(orderController.verifyPayment);
 
 router.route('/myOrders').get(orderController.getUserOrders);
 
+router.route('/vendorOrders').get(orderController.vendorOrders);
+
 router.route('/:id').get(orderController.getSingleOrder);
 
 router.patch('/:id/:status', orderController.updateOrder);
