@@ -39,6 +39,7 @@
     "paystack-api": "^2.0.6",
     "pug": "^3.0.2",
     "sharp": "^0.27.1",
+    "socket.io": "^4.1.2",
     "twilio": "^3.61.0",
     "uuid": "^8.3.2",
     "validator": "^13.5.2"

@@ -23,6 +23,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     return next(new AppError('Category not found', 404));
 
   const { files } = req;
+  console.log(files);
 
   const images = [];
   let imageUrls;
@@ -107,9 +108,15 @@ exports.vendorStats = catchAsync(async (req, res, next) => {
     },
   ]);
 
-  const grossEarnings = ratingStats
-    .map((el) => el.monthEarnings)
-    .reduce((a, b) => a + b);
+  let grossEarnings;
+
+  if (!ratingStats.length) {
+    grossEarnings = [];
+  } else {
+    grossEarnings = ratingStats
+      .map((el) => el.monthEarnings)
+      .reduce((a, b) => a + b);
+  }
 
   res.status(200).json({
     status: 'success',
@@ -117,5 +124,15 @@ exports.vendorStats = catchAsync(async (req, res, next) => {
     ratingStats,
     grossEarnings,
     productCount,
+  });
+});
+
+exports.vedorProducts = catchAsync(async (req, res, next) => {
+  const products = await Product.find({ uploader: req.user });
+
+  res.status(200).json({
+    status: 'success',
+    results: products.length,
+    products,
   });
 });

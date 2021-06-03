@@ -33,7 +33,6 @@ exports.getOne = (Model, popOptions) =>
     let query = Model.findById(id);
 
     if (popOptions) {
-
       query = query.populate(popOptions);
     }
 

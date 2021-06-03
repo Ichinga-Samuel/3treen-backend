@@ -5,16 +5,22 @@ const productController = require('../controllers/productController');
 const authController = require('../controllers/authController');
 const productViews = require('../middlewares/prodViewMiddleware');
 
-router.route('/').get(productController.getAllProducts).post(
-  authController.protect,
-
-  productController.uploadProductImages,
-  productController.createProduct
-);
+router
+  .route('/')
+  .get(productController.getAllProducts)
+  .post(
+    authController.protect,
+    productController.uploadProductImages,
+    productController.createProduct
+  );
 
 router
   .route('/vendorStats')
   .get(authController.protect, productController.vendorStats);
+
+router
+  .route('/vendorProducts')
+  .get(authController.protect, productController.vedorProducts);
 
 router
   .route('/:id')

@@ -98,9 +98,9 @@ exports.updateUserRole = catchAsync(async (req, res, next) => {
   });
 });
 
-//GET ALL USERS
-exports.getSalesRep = catchAsync(async (req, res, next) => {
-  const users = await User.find({ role: 'SR' });
+//GET USERS BASED ON ROLE
+exports.getUsersBasedOnRole = catchAsync(async (req, res, next) => {
+  const users = await User.find({ role: req.params.role });
 
   res.status(200).json({
     results: users.length,

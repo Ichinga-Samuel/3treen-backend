@@ -9,6 +9,7 @@ const router = express.Router();
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
+router.route('/getUser/:id').get(userController.getUser);
 router.post(
   '/signUpUser',
   authController.protect,
@@ -23,7 +24,7 @@ router.post(
 );
 
 //confirm password reset code
-router.post("/confirmCode/:code", authController.confirmResetCode)
+router.post('/confirmCode/:code', authController.confirmResetCode);
 
 //route for password reset
 router.patch('/resetPassword/:code', authController.resetPassword);
@@ -37,10 +38,6 @@ router.patch(
   authController.protect,
   authController.updatePassword
 );
-
-//Get all users with the Rule:SR
-router.route('/salesRep').get(userController.getSalesRep);
-
 
 //
 router.get(
@@ -58,7 +55,12 @@ router.patch(
   userController.updateMe
 );
 
-router.route('/:id').get(userController.getUser);
+router.get(
+  '/:role',
+  authController.protect,
+  authController.accessControl,
+  userController.getUsersBasedOnRole
+);
 
 router.route('/').get(userController.getAllUsers);
 
