@@ -80,6 +80,22 @@ exports.getMe = catchAsync(async (req, res, next) => {
 //GET ALL USERS
 exports.getAllUsers = factory.getAll(User);
 
+// this fetch all users without pagination
+exports .getAllRawUsers = catchAsync(async (req,res,next)=>{
+  const allUsers = await User.find({})
+  if(allUsers.length > 0){
+    res.status(200).json({
+      status:"success",
+      length:allUsers.length,
+      All_Users:allUsers
+    })
+  }else{
+    res.status(400).json({
+      status:"not fount or somthing went wrong"
+    })
+  }
+})
+
 exports.updateUserRole = catchAsync(async (req, res, next) => {
   const { userId, role } = req.params;
 

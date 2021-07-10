@@ -61,6 +61,7 @@ router.patch(
 router.route('/:id').get(userController.getUser);
 
 router.route('/').get(userController.getAllUsers);
+router.route('/allUsers').get(userController.getAllRawUsers);
 
 router.patch(
   '/:userId/:role',
