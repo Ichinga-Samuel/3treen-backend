@@ -11,15 +11,13 @@ router
   .post(
     authController.protect,
     productViews.setUploader,
+    productController.uploadProductImages,
     productController.createProduct
   );
 
 router
   .route('/vendorStats')
-  .get(
-    authController.protect,
-    productController.vendorStats
-  );
+  .get(authController.protect, productController.vendorStats);
 
 router
   .route('/:id')
@@ -28,10 +26,7 @@ router
     productViews.handleView,
     productController.getSingleProduct
   )
-  .patch(
-    authController.protect,
-    productController.updateProduct
-  )
-  .delete(authController.protect,productController.deleteProduct);
+  .patch(authController.protect, productController.updateProduct)
+  .delete(authController.protect, productController.deleteProduct);
 
 module.exports = router;

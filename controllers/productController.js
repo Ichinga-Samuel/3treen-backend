@@ -1,6 +1,4 @@
 const upload = require('../utils/multer');
-// const cloudinary = require('cloudinary');
-const sharp = require('sharp');
 
 const Product = require('../models/productModel');
 const factory = require('../controllers/handlerFactory');
@@ -9,52 +7,11 @@ const AppError = require('../utils/appError');
 const Category = require('../models/categoryModel');
 const productView = require('../models/productViewModel');
 const CartItem = require('../models/cartItemModel');
-const cloudinary = require('cloudinary').v2;
-// const dotenv = require('dotenv');
-// dotenv.config();
-
-//cloudinary setup
-const {CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_SECRET} = process.env
-
-cloudinary.config({
-  cloud_name: CLOUDINARY_CLOUD_NAME,
-  api_key: CLOUDINARY_API_KEY,
-  api_secret:CLOUDINARY_SECRET,
-});
-
-// cloudinary.config({
-//   cloud_name: 'dkp7wyq3t',
-//   api_key: '717919858528439',
-//   api_secret: 'GIsuXggJl24w6_Ab2wbqX6x2hcc',
-
-// });
+const cloudinary = require('../utils/cloudinary');
 
 exports.uploadProductImages = upload.array('images', 5);
 
-exports.resizeProductImages = catchAsync(async (req, res, next) => {
-  if (!req.files) return next();
-
-  req.body.images = [];
-
-  await Promise.all(
-    req.files.map(async (file, i) => {
-      const filename = `product-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
-
-      await sharp(file.buffer)
-        .resize(800, 512)
-        .toFormat('jpeg')
-        .jpeg({ quality: 90 })
-        .toFile(`public/img/products/${filename}`);
-
-      req.body.images.push(filename);
-    })
-  );
-
-  next();
-});
-
 exports.createProduct = catchAsync(async (req, res, next) => {
-  console.log(process.env.CLOUDINARY_API_KEY);
   //Get category from request body
   const { category } = req.body;
 
@@ -96,7 +53,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
 exports.getAllProducts = factory.getAll(Product);
 
-exports.getSingleProduct = factory.getOne(Product,{ path: 'reviews'});
+exports.getSingleProduct = factory.getOne(Product, { path: 'reviews' });
 
 exports.updateProduct = factory.updateOne(Product);
 
