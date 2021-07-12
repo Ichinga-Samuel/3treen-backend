@@ -10,6 +10,11 @@ const userSchema = mongoose.Schema({
     trim: true,
   },
 
+  verified: {
+    type: String,
+    default: false,
+  },
+
   photo: {
     type: String,
     default: 'default.jpg',
@@ -53,14 +58,14 @@ const userSchema = mongoose.Schema({
 
   role: {
     type: String,
-    enum: ['admin', 'user', 'QA', 'SR', 'company', 'vendor'],
+    enum: ['admin', 'user', 'QA', 'SR', 'company', 'vendor', 'CST'],
     default: 'user',
   },
 
   passwordChangedAt: Date,
-  passwordResetCode:Number,
+  passwordResetCode: Number,
   passwordResetExpires: Date,
-  passwordRE:Number
+  passwordRE: Number,
 });
 
 //DOCUMENT MIDDLEWARE

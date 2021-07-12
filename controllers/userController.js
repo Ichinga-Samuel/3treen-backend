@@ -4,6 +4,7 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('../controllers/handlerFactory');
 const User = require('../models/userModel');
+const Order = require('../models/orderModel');
 
 const multerStorage = multer.memoryStorage();
 
@@ -105,5 +106,56 @@ exports.getUsersBasedOnRole = catchAsync(async (req, res, next) => {
   res.status(200).json({
     results: users.length,
     users,
+  });
+});
+
+exports.getDashboard = catchAsync(async (req, res, next) => {
+  const results = await User.aggregate([
+    { $match: {} },
+    {
+      $group: {
+        _id: '$verified',
+        total: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const [registered, verified] = results;
+  const totalUsers = registered.total + verified.total;
+
+  const users = await User.aggregate([
+    { $match: { $or: [{ role: 'CST' }, { role: 'vendor' }] } },
+    {
+      $group: {
+        _id: '$role',
+        total: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const secondTotal = users.map((el) => el.total).reduce((a, b) => a + b);
+
+  const orders = await Order.aggregate([
+    { $match: { status: 'Completed' } },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: 1 },
+        revenue: { $sum: '$totalCost' },
+      },
+    },
+  ]);
+
+  const { revenue, total: orderTotal } = orders[0];
+
+  res.status(200).json({
+    status: 'success',
+    registered,
+    verified,
+    totalUsers,
+    users,
+    secondTotal,
+    revenue,
+    orderTotal,
   });
 });

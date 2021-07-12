@@ -98,14 +98,11 @@ exports.getUserOrders = catchAsync(async (req, res, next) => {
 
 exports.vendorOrders = catchAsync(async (req, res, next) => {
   const authUserId = String(req.user.id);
-  console.log(typeof authUserId, authUserId);
 
   const orders = await CartItem.find({
     ordered: true,
     productUploader: authUserId,
   });
-
-  console.log(orders);
 
   res.status(200).json({
     status: 'success',

@@ -7,7 +7,8 @@ const app = require('./app');
 
 //Connecting to the database
 
-let DB = process.env.DB_URL; // "mongodb://localhost:27017/3Green";
+let DB = 'mongodb://localhost:27017/3Green';
+// let DB = process.env.DB_URL;
 // if (process.env.NODE_ENV === 'production') {
 //   DB = process.env.DB_URL;
 // }
