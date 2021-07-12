@@ -82,20 +82,20 @@ exports.getMe = catchAsync(async (req, res, next) => {
 exports.getAllUsers = factory.getAll(User);
 
 // this fetch all users without pagination
-exports .getAllRawUsers = catchAsync(async (req,res,next)=>{
-  const allUsers = await User.find({})
-  if(allUsers.length > 0){
+exports.getAllRawUsers = catchAsync(async (req, res, next) => {
+  const allUsers = await User.find({});
+  if (allUsers.length > 0) {
     res.status(200).json({
-      status:"success",
-      length:allUsers.length,
-      All_Users:allUsers
-    })
-  }else{
+      status: 'success',
+      length: allUsers.length,
+      All_Users: allUsers,
+    });
+  } else {
     res.status(400).json({
-      status:"not fount or somthing went wrong"
-    })
+      status: 'not fount or somthing went wrong',
+    });
   }
-})
+});
 
 exports.updateUserRole = catchAsync(async (req, res, next) => {
   const { userId, role } = req.params;
@@ -162,7 +162,14 @@ exports.getDashboard = catchAsync(async (req, res, next) => {
     },
   ]);
 
-  const { revenue, total: orderTotal } = orders[0];
+  let totalRevenue = 0;
+  let totalOrders = 0;
+
+  if (orders.length) {
+    const { revenue, total: orderTotal } = orders[0];
+    totalRevenue = revenue;
+    totalOrders = orderTotal;
+  }
 
   res.status(200).json({
     status: 'success',
@@ -171,7 +178,7 @@ exports.getDashboard = catchAsync(async (req, res, next) => {
     totalUsers,
     users,
     secondTotal,
-    revenue,
-    orderTotal,
+    totalRevenue,
+    totalOrders,
   });
 });
