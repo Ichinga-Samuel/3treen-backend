@@ -32,8 +32,9 @@ router.post(
     paymentController.chargeBankAccount
 )
 
+//validate bank
 router.post(
-    "/bankAccount/verify:otp",
+    "/bankAccount/verify/:otp",
     authController.protect,
     paymentController.validateBankAcount
 )
