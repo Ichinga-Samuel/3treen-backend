@@ -25,6 +25,13 @@ router.post(
   authController.signup
 );
 
+router.post(
+  '/inviteAdmin',
+  authController.protect,
+  authController.accessControl,
+  authController.inviteAdmin
+);
+
 //confirm password reset code
 router.post('/confirmCode/:code', authController.confirmResetCode);
 

@@ -137,7 +137,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 //Access Control
 exports.accessControl = catchAsync(async (req, res, next) => {
-  if (req.user.role !== 'admin') {
+  if (req.user.role !== 'admin' || req.user.role !== 'sub-admin') {
     return next(new AppError('Only Admins can do this', 403));
   }
 
@@ -170,6 +170,9 @@ exports.accessControl = catchAsync(async (req, res, next) => {
 
 //Code for forgot password
 exports.forgotPassword = catchAsync(async (req, res, next) => {
+  if (req.user.role == 'sub-admin') {
+    return next(new AppError('Please request a new password from Super admin', 403));
+  }
   //1) Get user based on posted email
   const { email } = req.body;
   const user = await User.findOne({ email });
@@ -251,6 +254,9 @@ exports.confirmResetCode = catchAsync(async (req, res, next) => {
 //Code to reset User password
 exports.resetPassword = catchAsync(async (req, res, next) => {
   // Update changedPasswordAt property for the user
+  if (req.user.role == 'sub-admin') {
+    return next(new AppError('Only a Super admin can do this', 403));
+  }
   const { code } = req.params;
   const { password, passwordConfirm } = req.body;
   const mainUser = await User.findOne({ passwordResetCode: code });
@@ -284,6 +290,9 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
+  if (req.user.role == 'sub-admin') {
+    return next(new AppError('Only a Super admin can do this', 403));
+  }
   //1) Get user from collection
   const user = await User.findById(req.user.id).select('+password');
   console.log(user);
@@ -306,3 +315,26 @@ exports.setCompany = catchAsync(async (req, res, next) => {
 
   next();
 });
+
+exports.inviteAdmin = catchAsync(async (req, res, next) => {
+  const userData = { ...req.body };
+  const { fullName, email, password, passwordConfirm } = userData;
+  const role = 'sub-admin'
+  const adminExists = await User.exists({ email, role });
+
+  if (adminExists) {
+    return res.status(400).json({
+      message: 'Admin already exists',
+    });
+  }
+
+  const newAdmin = await User.create({
+    fullName,
+    email,
+    password,
+    passwordConfirm,
+    role,
+  });
+  await new Email(newAdmin).sendWelcome();
+  createSendToken(newAdmin, 201, res);
+})
