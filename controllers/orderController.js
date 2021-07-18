@@ -36,7 +36,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
   //Update cart items whose user field matches the current user id
   await CartItem.updateMany(
     { user: req.user, ordered: false },
-    { $set: { ordered: true, datePurchased: Date.now() } }
+    { $set: { ordered: true, datePurchased: Date.now(), status: 'Pending' } }
   );
 
   //Payment
@@ -116,3 +116,13 @@ exports.updateOrder = orderUpdate();
 exports.specificOrders = factory.getAll(Order);
 
 exports.getCCheckoutSession;
+
+exports.getAudit = catchAsync(async (req, res, next) => {
+  const products = await CartItem.find({ ordered: true });
+
+  res.status(200).json({
+    status: 'success',
+    results: products.length,
+    products,
+  });
+});

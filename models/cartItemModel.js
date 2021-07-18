@@ -39,6 +39,8 @@ const cartItemShema = mongoose.Schema({
   datePurchased: {
     type: Date,
   },
+
+  status: String,
 });
 
 //DOCUMENT MIDDLEWARE

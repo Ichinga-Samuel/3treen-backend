@@ -11,6 +11,8 @@ router.route('/').post(orderController.createOrder);
 
 router.route('/').get(orderController.getAllOrders);
 
+router.get('/audit', orderController.getAudit);
+
 router.route('/verifyPayment/:orderID').get(orderController.verifyPayment);
 
 router.route('/myOrders').get(orderController.getUserOrders);
