@@ -130,7 +130,7 @@ await this.newTransport().sendMail(mailOptions1);
   }
 
   async sendWelcome() {
-    await this.send('welcome', 'Welcome to the 3Green Family!');
+    await this.send('welcome', 'Welcome to the 3reen Family!');
   }
 
   async sendPasswordReset() {
