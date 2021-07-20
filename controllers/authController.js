@@ -169,15 +169,15 @@ exports.accessControl = catchAsync(async (req, res, next) => {
 
 //Code for forgot password
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-  if (req.user.role == 'sub-admin') {
-    return next(new AppError('Please request a new password from Super admin', 403));
-  }
   //1) Get user based on posted email
   const { email } = req.body;
   const user = await User.findOne({ email });
 
   if (!user) {
     return next(new AppError('There is no user with that email', 404));
+  }
+  if (user.role == 'sub-admin') {
+    return next(new AppError('Please request a new password from Super admin', 403));
   }
   // const resetToken = user.createPasswordResetToken();
   // await user.save({ validateBeforeSave: false });
