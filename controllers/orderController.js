@@ -41,29 +41,13 @@ exports.createOrder = catchAsync(async (req, res, next) => {
 
   //Payment
   // 2) Create checkout session
-  const session = await paystack.transaction.initialize({
-    amount: parseInt(order.totalCost) * 100,
-    email: req.user.email,
-    metadata: JSON.stringify({
-      custom_fields: [
-        {
-          name: `${req.user.fullName}`,
-          orderID: `${order._id}`,
-        },
-      ],
-    }),
-    channels: ['card', 'bank'],
-  });
-
-  await order.updateOne({
-    paystack: session.data,
-  });
+  
 
   res.status(200).json({
     status: 'success',
     order,
     products,
-    payment: session,
+    
   });
 });
 
