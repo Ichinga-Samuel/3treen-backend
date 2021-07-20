@@ -253,9 +253,6 @@ exports.confirmResetCode = catchAsync(async (req, res, next) => {
 //Code to reset User password
 exports.resetPassword = catchAsync(async (req, res, next) => {
   // Update changedPasswordAt property for the user
-  if (req.user.role == 'sub-admin') {
-    return next(new AppError('Only a Super admin can do this', 403));
-  }
   const { code } = req.params;
   const { password, passwordConfirm } = req.body;
   const mainUser = await User.findOne({ passwordResetCode: code });
