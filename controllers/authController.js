@@ -138,7 +138,7 @@ console.log('protrect');
 //Access Control
 exports.accessControl = catchAsync(async (req, res, next) => {
   if (req.user.role === 'admin' || req.user.role === 'sub-admin') {
-    next();
+    return next();
   }
   return next(new AppError('Only Admins can do this', 403));
 });
