@@ -128,7 +128,6 @@ exports.vendorStats = catchAsync(async (req, res, next) => {
   });
 });
 
-<<<<<<< HEAD
 exports.vedorProducts = catchAsync(async (req, res, next) => {
   const products = await Product.find({ uploader: req.user });
 
@@ -138,8 +137,6 @@ exports.vedorProducts = catchAsync(async (req, res, next) => {
     products,
   });
 });
-=======
->>>>>>> refs/remotes/origin/feature-customer-service
 // exports.topSellingProducts = catchAsync(async (req, res, next) => {
 //   const products = await CartItem.aggregate([
 //     {
@@ -151,9 +148,4 @@ exports.vedorProducts = catchAsync(async (req, res, next) => {
 //       },
 //     },
 //   ])
-<<<<<<< HEAD
 // })
-// })
-=======
-// })
->>>>>>> refs/remotes/origin/feature-customer-service
