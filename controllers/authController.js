@@ -74,7 +74,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   //2) Check if  user exists && password is correct
-  const user = await User.findOne({ email }).select('+password');
+  let user = await User.findOne({ email }).select('+password');
 
   if (!user) {
     return next(new AppError('No User with that email', 404));
@@ -87,6 +87,11 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!correct) {
     return next(new AppError('Incorrect email or password', 401));
   }
+
+  // Update last login time
+  user.lastLoginTime = new Date();
+  user.lastLogoutTime = null;
+  user.save()
 
   //3) If everything is ok, send token to client
   createSendToken(user, 200, res);

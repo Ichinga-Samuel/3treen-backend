@@ -62,6 +62,8 @@ const userSchema = mongoose.Schema({
     default: 'user',
   },
 
+  lastLoginTime: Date,
+  lastLogoutTime: Date,
   passwordChangedAt: Date,
   passwordResetCode: Number,
   passwordResetExpires: Date,
