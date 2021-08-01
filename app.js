@@ -10,6 +10,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
 const userRouter = require('./routes/userRoutes');
+const logisticsRouter = require('./routes/logisticsRoutes');
 const productRouter = require('./routes/productRoutes');
 const orderRouter = require('./routes/orderRoutes');
 const cartRouter = require('./routes/cartRoutes');
@@ -35,6 +36,7 @@ app.use(cors())
 
 //ROUTES
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/logistics', logisticsRouter);
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/cart', cartRouter);
