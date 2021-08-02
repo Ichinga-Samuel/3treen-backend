@@ -11,6 +11,18 @@ router.post('/add',
     logisticsController.addCompany
 );
 
+router.get('/getCompany/:id',
+    authController.protect,
+    authController.accessControl,
+    logisticsController.getCompany
+);
+
+router.get('/getAllCompany',
+    authController.protect,
+    authController.accessControl,
+    logisticsController.getAllCompanies
+);
+
 router.delete('/remove/:id',
     authController.protect,
     authController.accessControl,
