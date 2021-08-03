@@ -22,8 +22,18 @@ const logisticsSchema = mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    lowercase: true,
     //An alternative to regex to perform email validation
     validate: [validator.isEmail, 'Please Provide a valid email'],
+  },
+
+  address: {
+    type: String,
+  },
+
+  state: {
+    type: String,
+    lowercase: true
   },
 
   phone: {
