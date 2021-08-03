@@ -23,6 +23,12 @@ router.get('/getAllCompany',
     logisticsController.getAllCompanies
 );
 
+router.get('/getCompanyByState',
+    authController.protect,
+    authController.accessControl,
+    logisticsController.getCompaniesByState
+);
+
 router.delete('/remove/:id',
     authController.protect,
     authController.accessControl,
