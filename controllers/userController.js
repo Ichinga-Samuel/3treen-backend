@@ -82,7 +82,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
 exports.getAllUsers = factory.getAll(User);
 
 // this fetch all users without pagination
-exports .getAllRawUsers = catchAsync(async (req,res,next)=>{
+exports.getAllRawUsers = catchAsync(async (req,res,next)=>{
   const allUsers = await User.find({})
   if(allUsers.length > 0){
     res.status(200).json({
@@ -92,7 +92,7 @@ exports .getAllRawUsers = catchAsync(async (req,res,next)=>{
     })
   }else{
     res.status(400).json({
-      status:"not fount or somthing went wrong"
+      status:"not found or somthing went wrong"
     })
   }
 })

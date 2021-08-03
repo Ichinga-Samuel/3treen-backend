@@ -97,6 +97,13 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
+// User logout
+exports.logout = catchAsync(async (req, res, next) => {
+  let user = await User.findById(req.user.id)
+  user.lastLogoutTime = new Date();
+  user.save()
+});
+
 exports.protect = catchAsync(async (req, res, next) => {
   // //1) Getting token and check if its there
 

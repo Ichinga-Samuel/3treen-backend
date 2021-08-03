@@ -67,17 +67,39 @@ exports.getCompany = factory.getOne(Logistics);
 exports.getAllCompanies = factory.getAll(Logistics);
 
 // this fetch all companies without pagination
-exports .getAllRawCompanies = catchAsync(async (req,res,next)=>{
+exports.getAllRawCompanies = catchAsync(async (req,res,next)=>{
   const allCompanies = await Logistics.find({})
   if(allCompanies.length > 0){
     res.status(200).json({
       status:"success",
       length:allCompanies.length,
-      All_Users:allCompanies
+      companies:allCompanies
     })
   }else{
     res.status(400).json({
-      status:"not fount or somthing went wrong"
+      status:"not found or somthing went wrong"
+    })
+  }
+});
+
+exports.getCompaniesByState = catchAsync(async (req,res,next)=>{
+  let { state } = req.body;
+  if(!state){
+    res.status(400).json({
+      status:"Please specify a state"
+    })
+  }
+  state = state.trim().toLowerCase()
+  const stateCompanies = await Logistics.find({state})
+  if(stateCompanies.length > 0){
+    res.status(200).json({
+      status:"success",
+      length:stateCompanies.length,
+      companies:allCompanies
+    })
+  }else{
+    res.status(400).json({
+      status:"not found or somthing went wrong"
     })
   }
 });
