@@ -83,7 +83,7 @@ exports.getAllRawCompanies = catchAsync(async (req,res,next)=>{
 });
 
 exports.getCompaniesByState = catchAsync(async (req,res,next)=>{
-  let { state } = req.body;
+  let { state } = req.params;
   if(!state){
     res.status(400).json({
       status:"Please specify a state"
