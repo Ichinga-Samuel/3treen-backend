@@ -8,7 +8,8 @@ const referralSchema = mongoose.Schema({
   },
 
   user: {
-    type: Object,
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
     required: true,
   },
 

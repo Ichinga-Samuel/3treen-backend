@@ -33,7 +33,7 @@ const reviewSchema = mongoose.Schema({
     //the reviewed prouduct
     reviewdProduct:{
         type:mongoose.Schema.Types.ObjectId,
-        required:[true,"A review must be maped to a prodct"],
+        required:[true,"A review must be maped to a product"],
         ref:"Product"
     }
 

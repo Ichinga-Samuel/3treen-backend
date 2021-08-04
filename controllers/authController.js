@@ -21,6 +21,13 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
+const onlyAdminPermitted = (role) => {
+  if (role == 'QA' || role == 'SR' || role == 'CST'){
+    return false
+  }
+  return true
+}
+
 //Code for user signup
 exports.signup = catchAsync(async (req, res, next) => {
   const userData = { ...req.body };
@@ -32,6 +39,16 @@ exports.signup = catchAsync(async (req, res, next) => {
     role = req.role;
   } else {
     role = 'user';
+  }
+
+  const allowed = onlyAdminPermitted(role)
+  if(!allowed && !req.user){
+    return next(new AppError('Only an Admin can do this', 403));
+  }
+  if(req.user){
+    if(!allowed && req.user.role != 'admin'){
+      return next(new AppError('Only an Admin can do this', 403));
+    }
   }
 
   // check if user with the same email allready exit

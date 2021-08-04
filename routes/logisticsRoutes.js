@@ -23,7 +23,7 @@ router.get('/getAllCompany',
     logisticsController.getAllCompanies
 );
 
-router.get('/getCompanyByState',
+router.get('/getCompanyByState/:state',
     authController.protect,
     authController.accessControl,
     logisticsController.getCompaniesByState
