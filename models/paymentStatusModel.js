@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const productSchema = mongoose.Schema({
+const paymentStatusSchema = mongoose.Schema({
     //getting the payer
     payer:{
         type:mongoose.Schema.Types.ObjectId,
@@ -16,3 +16,5 @@ const productSchema = mongoose.Schema({
     },
     timeStamp:Date
 })
+
+module.exports = mongoose.model('PaymentStatus', paymentStatusSchema);
