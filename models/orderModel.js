@@ -12,6 +12,11 @@ const orderSchema = mongoose.Schema({
     required: true,
   },
 
+  paymentStatus: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'PaymentStatus',
+  },
+
   name: {
     type: String,
     required: true,

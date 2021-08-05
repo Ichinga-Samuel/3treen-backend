@@ -95,7 +95,7 @@ exports.getCompaniesByState = catchAsync(async (req,res,next)=>{
     res.status(200).json({
       status:"success",
       length:stateCompanies.length,
-      companies:allCompanies
+      companies:stateCompanies
     })
   }else{
     res.status(400).json({
