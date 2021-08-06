@@ -9,6 +9,7 @@ app.use(cors());
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
+const adminRouter = require('./routes/adminRoutes');
 const userRouter = require('./routes/userRoutes');
 const logisticsRouter = require('./routes/logisticsRoutes');
 const productRouter = require('./routes/productRoutes');
@@ -35,6 +36,7 @@ app.use(compression());
 app.use(cors())
 
 //ROUTES
+app.use('/api/v1/admin', adminRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/logistics', logisticsRouter);
 app.use('/api/v1/products', productRouter);

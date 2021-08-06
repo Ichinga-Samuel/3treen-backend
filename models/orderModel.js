@@ -61,7 +61,7 @@ const orderSchema = mongoose.Schema({
     access_code: String,
     reference: String,
   },
-});
+}, { timestamps: true });
 
 //DOCUMENT MIDDLEWARE
 orderSchema.pre('save', function (next) {
