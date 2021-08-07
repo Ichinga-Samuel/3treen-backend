@@ -20,6 +20,15 @@ const userSchema = mongoose.Schema({
     default: 'default.jpg',
   },
 
+  address: {
+    type: String,
+  },
+
+  state: {
+    type: String,
+    lowercase: true,
+  },
+
   email: {
     type: String,
     required: true,
@@ -54,6 +63,13 @@ const userSchema = mongoose.Schema({
 
   workPhone: {
     type: Number,
+  },
+
+  rating: {
+    type: {
+      count: {type: Number, default: 0},
+      average: {type: Number, default: 0}
+    }
   },
 
   role: {
