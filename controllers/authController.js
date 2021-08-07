@@ -32,12 +32,9 @@ const onlyAdminPermitted = (role) => {
 exports.signup = catchAsync(async (req, res, next) => {
   const userData = { ...req.body };
 
-  const { fullName, email, password, passwordConfirm } = userData;
+  const { fullName, email, password, passwordConfirm, role, address, state, homePhone, workPhone } = userData;
 
-  let role;
-  if (req.role) {
-    role = req.role;
-  } else {
+  if (!role) {
     role = 'user';
   }
 
@@ -66,6 +63,10 @@ exports.signup = catchAsync(async (req, res, next) => {
     password,
     passwordConfirm,
     role,
+    address,
+    state,
+    homePhone,
+    workPhone
   });
 
   if (req.user) {
