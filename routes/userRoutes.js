@@ -6,7 +6,10 @@ const salesRepProtect = require('../middlewares/salesRepProtect');
 
 const router = express.Router();
 
-router.post('/signup', authController.signup);
+router.post('/signup',
+authController.getUser,
+  authController.signup
+  );
 router.post('/login', authController.login);
 
 router.post('/logout', authController.logout);
