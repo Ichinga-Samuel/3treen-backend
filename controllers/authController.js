@@ -32,7 +32,7 @@ const onlyAdminPermitted = (role) => {
 exports.signup = catchAsync(async (req, res, next) => {
   const userData = { ...req.body };
 
-  const { fullName, email, password, passwordConfirm, role, address, state, homePhone, workPhone } = userData;
+  let { fullName, email, password, passwordConfirm, role, address, state, homePhone, workPhone } = userData;
 
   if (!role) {
     role = 'user';
