@@ -7,7 +7,7 @@ const salesRepProtect = require('../middlewares/salesRepProtect');
 const router = express.Router();
 
 router.post('/signup',
-authController.getUser,
+  authController.getUser,
   authController.signup
   );
 router.post('/login', authController.login);
@@ -69,13 +69,6 @@ router.patch(
   userController.updateMe
 );
 
-router.get(
-  '/:role',
-  authController.protect,
-  authController.accessControl,
-  userController.getUsersBasedOnRole
-);
-
 router.route('/').get(userController.getAllUsers);
 router.route('/allUsers').get(userController.getAllRawUsers);
 
@@ -84,6 +77,13 @@ router.patch(
   authController.protect,
   authController.accessControl,
   userController.updateUserRole
+);
+
+router.get(
+  '/:role',
+  authController.protect,
+  authController.accessControl,
+  userController.getUsersBasedOnRole
 );
 
 module.exports = router;
