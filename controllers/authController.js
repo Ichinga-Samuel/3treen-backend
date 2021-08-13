@@ -150,7 +150,7 @@ exports.login = catchAsync(async (req, res, next) => {
   // Update last login time
   user.lastLoginTime = new Date();
   user.lastLogoutTime = null;
-  user.save()
+  await user.save()
 
   //3) If everything is ok, send token to client
   createSendToken(user, 200, res);
