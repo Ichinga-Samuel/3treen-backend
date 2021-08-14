@@ -9,13 +9,13 @@ function escapeRegex(text) {
 
 module.exports = {
     //get product by name
-    getByName: catchAsync(async (req,res,next) => {
+    getSearchResult: catchAsync(async (req,res,next) => {
         //get the search word from client with req.body.word
-        var {word} = req.body;
+        const {search} = req.query;
 
-        if (word) {
+        if (search) {
 
-            const regex = new RegExp(escapeRegex(word), 'gi');
+            const regex = new RegExp(escapeRegex(search), 'gi');
             //search by name or category or keyFeatures
            await productModel.find({$or:[{ "name": regex },{"category":regex},{"keyFeatures":regex}]}, function(err, foundProduct) {
                 if(err){
