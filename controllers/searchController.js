@@ -1,11 +1,8 @@
 const productModel = require("../models/productModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
+const rexSeach = require("../utils/searchExp");
 
-// regex ptan for search
-function escapeRegex(text) {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-}
 
 module.exports = {
     //get product by name
@@ -14,8 +11,7 @@ module.exports = {
         const {search} = req.query;
 
         if (search) {
-
-            const regex = new RegExp(escapeRegex(search), 'gi');
+            const regex = new RegExp(rexSeach.escapeRegex(search), 'gi');
             //search by name or category or keyFeatures
            await productModel.find({$or:[{ "name": regex },{"category":regex},{"keyFeatures":regex}]}, function(err, foundProduct) {
                 if(err){
