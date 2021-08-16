@@ -18,14 +18,10 @@ module.exports = {
                     new AppError("sorry somthing went wrong", 401)
                     console.log(err);
                 }else{
-                    if(foundProduct.length < 1){
-                        new AppError("item not found", 404)
-                    }else{
-                        res.status(201).json({
-                            status:"success",
-                            data:foundProduct
-                        })
-                    }
+                    res.status(201).json({
+                        status:"success",
+                        data:foundProduct
+                    })
                 }
             }); 
          }
