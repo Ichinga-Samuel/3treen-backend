@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
 const messageSchema = mongoose.Schema({
-  body: {
+  content: {
     type: String,
     required: [true, 'A message must have a body'],
     trim: true,
@@ -18,11 +18,11 @@ const messageSchema = mongoose.Schema({
     type: String,
   },
 
-  recieverId: {
+  receiverId: {
     type: String,
   },
 
-  reciever: {
+  receiver: {
     type: mongoose.Schema.ObjectId,
     required: [true, 'A message must have a receiver'],
     ref: 'User',
@@ -41,7 +41,7 @@ const messageSchema = mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-});
+}, { timestamps: true });
 
 //DOCUMENT MIDDLEWARE
 messageSchema.pre('save', async function (next) {

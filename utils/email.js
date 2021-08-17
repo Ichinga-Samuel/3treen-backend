@@ -129,6 +129,18 @@ await this.newTransport().sendMail(mailOptions1);
   await this.newTransport().sendMail(mailOptions);
   }
 
+  async sendChat(subject, content){
+    const mailOptions = {
+      from: this.from,
+      to: this.to,
+      subject,
+      html:content
+    };
+
+  // Create a transport and send email
+  await this.newTransport().sendMail(mailOptions);
+  }
+
   async sendWelcome() {
     await this.send('welcome', 'Welcome to the 3reen Family!');
   }
