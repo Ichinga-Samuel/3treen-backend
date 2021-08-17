@@ -20,7 +20,7 @@ router.get(
 
 // Get performance of single sales rep
 router.post(
-  '/send/:user',
+  '/send',
   authController.protect,
   chatController.sendMessage
 );
