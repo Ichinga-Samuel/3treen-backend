@@ -99,3 +99,19 @@ exports.getDashboard = catchAsync(async (req, res, next) => {
     totalOrders,
   });
 });
+
+// Get contacts info of users
+exports.getContacts = catchAsync(async (req, res, next) => {
+  try {
+    const { role } = req.params;
+    let contacts = await User.find({role})
+      .select(['fullName', 'email', 'photo', 'address', 'state', 'homePhone', 'workPhone'])
+
+    res.status(200).json({
+      status: "success",
+      contacts: contacts
+    })
+  } catch (error) {
+    new AppError(error, 500)
+  }
+});

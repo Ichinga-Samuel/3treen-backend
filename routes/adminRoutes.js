@@ -23,4 +23,11 @@ router.get(
   adminController.getSalesRepsData
 );
 
+router.get(
+  '/contacts/:role',
+  authController.protect,
+  authController.accessControl,
+  adminController.getContacts
+);
+
 module.exports = router;
