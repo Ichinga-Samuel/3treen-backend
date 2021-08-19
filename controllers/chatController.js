@@ -41,7 +41,8 @@ exports.sendMessage = catchAsync(async (req,res)=>{
   const { type, receiver, message, medium, subject} = req.body;
   let sent = false;
 
-  if(medium !== 'email' || medium !== 'sms'){
+  mediums = ['email', 'sms']
+  if(!mediums.includes(medium)){
     res.status(400).json({
       status:"failed",
       error:"'medium' should either be 'email' or 'sms'"
