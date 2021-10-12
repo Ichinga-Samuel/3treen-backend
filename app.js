@@ -20,13 +20,14 @@ const messageRouter = require('./routes/messageRoutes');
 const referralRouter = require('./routes/referralRoutes');
 const reviewRoute = require('./routes/reviewRoutes');
 const seachRouter = require("./routes/searchRoutes")
+const inventoryRouter = require("./routes/inventoryRoutes")
 const paymentRouter = require("./routes/paymentRoutes");
 const chatRouter = require("./routes/chatRoutes");
 const emailRouter = require("./routes/emailRoute");
 
 //Body parser
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: false}));
 
 //Serve static file
 app.use(express.static('public'));
@@ -50,6 +51,7 @@ app.use('/api/v1/messages', messageRouter);
 app.use('/api/v1/referrals', referralRouter);
 app.use('/api/v1/review', reviewRoute);
 app.use('/api/v1/search',seachRouter);
+app.use('/api/v1/inventory', inventoryRouter);
 app.use('/api/v1/payment',paymentRouter);
 app.use('/api/v1/chat',chatRouter);
 app.use('/api/v1/email', emailRouter)
