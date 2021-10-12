@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer');
-
-
+const inlinecss = require('nodemailer-juice');
 const { MAILJET_USER, MAILJET_PORT, MAILJET_PASSWORD, MAILJET_HOST} = process.env;
 
 exports.emailService = class Email{
@@ -30,6 +29,7 @@ exports.emailService = class Email{
         };
 
         // Create a transport and send email
+        this.transporter().use('compile', inlinecss());
         let res = await this.transporter().sendMail(mailOptions);
         return res.accepted
     }
