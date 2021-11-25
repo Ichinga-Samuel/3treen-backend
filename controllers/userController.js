@@ -44,17 +44,7 @@ const filterObj = (obj, ...allowedFileds) => {
 
 //Code to Update fields other than password on the user model
 exports.updateMe = catchAsync(async (req, res, next) => {
-  //1) Create error if user Posts password data
-  if (req.body.password || req.body.passwordConfirm) {
-    return next(
-      new AppError(
-        'This route is not for password updates. Please use /UpdateMypassword',
-        400
-      )
-    );
-  }
 
-  //2) Update user document
   const filteredBody = filterObj(req.body, 'fullName', 'email', 'photo');
   if (req.file) filteredBody.photo = req.file.filename;
 

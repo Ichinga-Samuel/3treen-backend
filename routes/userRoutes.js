@@ -3,26 +3,19 @@ const express = require('express');
 const authController = require('../controllers/authController');
 const userController = require('../controllers/userController');
 const salesRepProtect = require('../middlewares/salesRepProtect');
+const {auth} = require('../middlewares/authenticate')
 
 const router = express.Router();
 
-router.post('/signup',
-  authController.getUser,
-  authController.signup
-  );
+router.post('/signup', authController.signup);
 router.post('/login', authController.login);
-
 router.post('/logout', authController.logout);
 
 router.get('/admin/dashboard', userController.getDashboard);
 
 router.route('/getUser/:id').get(userController.getUser);
-router.post(
-  '/signUpUser',
-  authController.protect,
-  salesRepProtect.accessControl,
-  authController.signup
-);
+
+router.post('/signUpUser',  authController.signup);
 
 router.post(
   '/signUpAsCompany',
@@ -30,28 +23,23 @@ router.post(
   authController.signup
 );
 
-router.post(
-  '/inviteAdmin',
-  authController.protect,
-  authController.accessControl,
-  authController.inviteAdmin
-);
+router.get('/inviteAdmin/:id', auth, authController.inviteAdmin);
 
-//confirm password reset code
-router.post('/confirmCode/:code', authController.confirmResetCode);
+router.get('/activate/:token', authController.activate)
 
 //route for password reset
-router.patch('/resetPassword/:code', authController.resetPassword);
+router.post('/resetPassword/', authController.resetPassword);
 
 //route for forgot password
 router.post('/forgotPassword', authController.forgotPassword);
 
+router.get('/test', auth, (req, res,)=>{
+  console.log(new Date(req.user.iat), new Date(req.user.exp))
+  res.status(200).json({msg: "ok ok ok"})
+})
+
 //update password
-router.patch(
-  '/updateMyPassword',
-  authController.protect,
-  authController.updatePassword
-);
+router.patch('/updateMyPassword', auth, authController.updatePassword);
 
 //
 router.get(
@@ -63,7 +51,8 @@ router.get(
 
 router.patch(
   '/updateMe',
-  authController.protect,
+  auth,
+  authController.getUser,
   userController.uploadUserPhoto,
   userController.resizeUserPhoto,
   userController.updateMe
@@ -74,14 +63,16 @@ router.route('/allUsers').get(userController.getAllRawUsers);
 
 router.patch(
   '/:userId/:role',
-  authController.protect,
+  auth,
+  authController.getUser,
   authController.accessControl,
   userController.updateUserRole
 );
 
 router.get(
   '/:role',
-  authController.protect,
+  auth,
+  authController.getUser,
   authController.accessControl,
   userController.getUsersBasedOnRole
 );
