@@ -82,7 +82,7 @@ exports.getAllRawUsers = catchAsync(async (req,res,next)=>{
     })
   }else{
     res.status(400).json({
-      status:"not found or somthing went wrong"
+      status:"not found or something went wrong"
     })
   }
 })

@@ -33,10 +33,6 @@ router.post('/resetPassword/', authController.resetPassword);
 //route for forgot password
 router.post('/forgotPassword', authController.forgotPassword);
 
-router.get('/test', auth, (req, res,)=>{
-  console.log(new Date(req.user.iat), new Date(req.user.exp))
-  res.status(200).json({msg: "ok ok ok"})
-})
 
 //update password
 router.patch('/updateMyPassword', auth, authController.updatePassword);
@@ -44,7 +40,7 @@ router.patch('/updateMyPassword', auth, authController.updatePassword);
 //
 router.get(
   '/me',
-  authController.protect,
+  auth,
   userController.getMe,
   userController.getUser
 );

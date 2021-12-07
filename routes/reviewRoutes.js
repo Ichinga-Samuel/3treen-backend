@@ -3,6 +3,7 @@ const routerr = express.Router();
 
 const authController = require("../controllers/authController");
 const reviewController = require("../controllers/reviewController");
+const {auth} = require('../middlewares/authenticate')
 //review route
 routerr
     .route('/')
@@ -12,12 +13,12 @@ routerr
     
 routerr
     .route('/:id')
-    .post(authController.protect, reviewController.makeReview)
+    .post(auth, reviewController.makeReview)
     .patch(
-        authController.protect,
+        auth,
         reviewController.updateReview
     )
-    .delete(authController.protect,reviewController.removeReview)
+    .delete(auth,reviewController.removeReview)
 
 module.exports = routerr;
     
