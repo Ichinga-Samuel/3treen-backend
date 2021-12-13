@@ -29,7 +29,7 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-
+  console.log(req.body)
   const userData = { ...req.body };
 
   let { fullName, email, password, address, state, homePhone, workPhone } = userData;
