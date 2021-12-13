@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
+const {auth} = require('../middlewares/authenticate')
 const categoryController = require('../controllers/categoryController');
 const categoryFilter = require("../controllers/categoryFilterDisplayController");
 
@@ -8,7 +9,7 @@ router
   .route('/')
   .get(categoryController.getAllCategories)
   .post(
-    authController.protect,
+    auth,
     authController.accessControl,
     categoryController.createCategory
   );
@@ -17,7 +18,7 @@ router
     .route("/categoryFilter")
     .get(categoryFilter.categoryFilter)
 
-router.use(authController.protect, authController.accessControl);
+router.use(auth, authController.accessControl);
 
 router
   .route('/:id')

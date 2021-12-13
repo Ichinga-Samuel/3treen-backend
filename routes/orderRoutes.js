@@ -4,8 +4,9 @@ const router = express.Router();
 
 const orderController = require('../controllers/orderController');
 const authController = require('../controllers/authController');
+const {auth} = require('../middlewares/authenticate')
 
-router.use(authController.protect);
+router.use(auth);
 
 router.route('/').post(orderController.createOrder);
 

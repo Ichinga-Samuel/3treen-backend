@@ -1,48 +1,49 @@
 const express = require('express');
 
 const authController = require('../controllers/authController');
+const {auth} = require('../middlewares/authenticate')
 const logisticsController = require('../controllers/logisticsController');
 
 const router = express.Router();
 
 router.post('/add',
-    authController.protect,
+    auth,
     authController.accessControl,
     logisticsController.addCompany
 );
 
 router.get('/getCompany/:id',
-    authController.protect,
+    auth,
     authController.accessControl,
     logisticsController.getCompany
 );
 
 router.get('/getAllCompany',
-    authController.protect,
+    auth,
     authController.accessControl,
     logisticsController.getAllCompanies
 );
 
 router.get('/getCompanyByState/:state',
-    authController.protect,
+    auth,
     authController.accessControl,
     logisticsController.getCompaniesByState
 );
 
 router.delete('/remove/:id',
-    authController.protect,
+    auth,
     authController.accessControl,
     logisticsController.removeCompany
 );
 
 router.put('/update/:id',
-    authController.protect,
+    auth,
     authController.accessControl,
     logisticsController.updateCompany
 );
 
 router.put('/rate/:id',
-    authController.protect,
+    auth,
     logisticsController.rateCompany
 );
 

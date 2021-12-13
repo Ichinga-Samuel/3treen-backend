@@ -4,28 +4,29 @@ const router = express.Router();
 const productController = require('../controllers/productController');
 const authController = require('../controllers/authController');
 const productViews = require('../middlewares/prodViewMiddleware');
+const {auth} = require("../middlewares/authenticate");
 
 router
   .route('/')
   .get(productController.getAllProducts)
   .post(
-    authController.protect,
+    auth,
     productController.uploadProductImages,
     productController.createProduct
   );
 
 router
   .route('/vendorStats')
-  .get(authController.protect, productController.vendorStats);
+  .get(auth, productController.vendorStats);
 
 router
   .route('/vendorProducts')
-  .get(authController.protect, productController.vedorProducts);
+  .get(auth, productController.vedorProducts);
 
 router
   .route('/:id')
   .get(productController.getSingleProduct)
-  .patch(authController.protect, productController.updateProduct)
-  .delete(authController.protect, productController.deleteProduct);
+  .patch(auth, productController.updateProduct)
+  .delete(auth, productController.deleteProduct);
 
 module.exports = router;

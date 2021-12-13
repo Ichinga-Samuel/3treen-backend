@@ -4,22 +4,23 @@ const router = express.Router();
 
 const cartController = require('../controllers/cartController');
 const authController = require('../controllers/authController');
+const {auth} = require('../middlewares/authenticate')
 
 router
   .route('/')
   .get(cartController.getAllCartItems)
-  .delete(authController.protect, cartController.clearCart);
+  .delete(auth, cartController.clearCart);
 
 router
   .route('/:productId')
-  .post(authController.protect, cartController.addToCart);
+  .post(auth, cartController.addToCart);
 
-router.route('/myCart').get(authController.protect, cartController.getUserCart);
+router.route('/myCart').get(auth, cartController.getUserCart);
 
 router
   .route('/:itemId')
   .patch(
-    authController.protect,
+    auth,
     cartController.accessControl,
     cartController.updateCartItem
   );
@@ -27,7 +28,7 @@ router
 router
   .route('/:id')
   .delete(
-    authController.protect,
+    auth,
     cartController.accessControl,
     cartController.removeFromCart
   );

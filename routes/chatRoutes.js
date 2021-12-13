@@ -1,6 +1,7 @@
 const express = require('express');
 
 const authController = require('../controllers/authController');
+const {auth} = require('../middlewares/authenticate')
 const chatController = require('../controllers/chatController');
 
 const router = express.Router();
@@ -8,38 +9,38 @@ const router = express.Router();
 //Get all Sales Rep
 router.get(
   '/messages/user/:user',
-  authController.protect,
+  auth,
   chatController.getMessages
 );
 
 router.get(
   '/messages/room/:room',
-  authController.protect,
+  auth,
   chatController.getRoomMessages
 );
 
 // Get performance of single sales rep
 router.post(
   '/send',
-  authController.protect,
+  auth,
   chatController.sendMessage
 );
 
 router.put(
   '/read/:id',
-  authController.protect,
+  auth,
   chatController.markAsRead
 );
 
 router.put(
   '/:id',
-  authController.protect,
+  auth,
   chatController.updateMessage
 );
 
 router.delete(
   '/:id',
-  authController.protect,
+  auth,
   chatController.deleteMessage
 );
 

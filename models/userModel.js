@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const jwt = require("jsonwebtoken")
 
 const userSchema = mongoose.Schema({
   fullName: {
@@ -38,23 +38,11 @@ const userSchema = mongoose.Schema({
   },
 
   password: {
-    type: String,
-    required: true,
-    select: false,
-    minlength: [8, 'A password should be at least 8 characters'],
-  },
-
-  passwordConfirm: {
-    type: String,
-    //required: true,
-    validate: {
-      validator: function (el) {
-        // This only works on CREATE and SAVE!!!
-        return el === this.password;
-      },
-
-      message: 'Passwords are not the same!',
+    hash: {
+      type: String,
+      required: true
     },
+    salt: String
   },
 
   homePhone: {
@@ -77,68 +65,36 @@ const userSchema = mongoose.Schema({
     enum: ['admin', 'sub-admin', 'user', 'QA', 'SR', 'company', 'vendor', 'CST'],
     default: 'user',
   },
-
   lastLoginTime: Date,
   lastLogoutTime: Date,
-  passwordChangedAt: Date,
-  passwordResetCode: Number,
-  passwordResetExpires: Date,
-  passwordRE: Number,
-});
-
-//DOCUMENT MIDDLEWARE
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
-    return next();
+  passwordChangedAt:{
+    type: Date,
+    default: new Date()
   }
-
-  //Hash password with cost of 12
-  this.password = await bcrypt.hash(this.password, 12);
-
-  //Delete the passwordConfirm field
-  this.passwordConfirm = undefined;
-  next();
-});
-
-userSchema.pre('save', function (next) {
-  if (!this.isModified('password') || this.isNew) return next();
-
-  this.passwordChangedAt = Date.now() - 1000;
-  next();
 });
 
 //INSTANCE METHODS
-userSchema.methods.correctPassword = async function (
-  inputedPassword,
-  userPassword
-) {
-  return await bcrypt.compare(inputedPassword, userPassword);
+userSchema.methods.setPassword = function(pwd){
+  this.password.salt = crypto.randomBytes(32).toString('hex');
+  this.password.hash = crypto.pbkdf2Sync(pwd, this.password.salt, 10000, 64, "sha512").toString('hex');
 };
 
-userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
-  if (this.passwordChangedAt) {
-    const changedTimeStamp = parseInt(
-      this.passwordChangedAt.getTime() / 1000,
-      10
-    );
-
-    return JWTTimestamp < changedTimeStamp;
-  }
-
-  return false;
+userSchema.methods.isValidPassword = function(pwd){
+  const hash = crypto.pbkdf2Sync(pwd, this.password.salt, 10000, 64, "sha512").toString('hex');
+  return this.password.hash === hash
 };
 
-// userSchema.methods.createPasswordResetToken = function () {
-//   const resetToken = crypto.randomBytes(32).toString('hex');
-
-//   this.passwordResetToken = crypto
-//     .createHash('sha256')
-//     .update(resetToken)
-//     .digest('hex');
-
-//   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-
-//   return resetToken;
-// };
+userSchema.methods.genJwt = function(){
+  const expire = new Date();
+  expire.setDate(expire.getDate() + 1);
+  return jwt.sign({
+        id: this._id,
+        email: this.email,
+        name: this.name,
+        exp: parseInt(expire.getTime() / 1000, 10)
+      }, process.env.JWT_SECRET
+  )
+};
+;
 
 module.exports = mongoose.model('User', userSchema);

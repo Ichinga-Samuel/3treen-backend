@@ -2,40 +2,41 @@ const express = require('express');
 
 const authController = require('../controllers/authController');
 const paymentController = require("../controllers/paymentController")
+const {auth} = require("../middlewares/authenticate");
 
 const router = express.Router();
 //card charge
 router.post(
     "/card",
-    authController.protect,
+    auth,
     paymentController.cardCharge
 )
 
 router.post(
     "/card/verify/:otp",
     
-    authController.protect,
+    auth,
     paymentController.otpAuth
 )
 
 //USSD charge
 router.post(
     "/ussd",
-    authController.protect,
+    auth,
     paymentController.chargeUssd
 )
 
 //bank account
 router.post(
     "/bankAccount",
-    authController.protect,
+    auth,
     paymentController.chargeBankAccount
 )
 
 //validate bank
 router.post(
     "/bankAccount/verify/:otp",
-    authController.protect,
+    auth,
     paymentController.validateBankAcount
 )
 
