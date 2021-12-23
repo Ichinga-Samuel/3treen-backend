@@ -1,6 +1,7 @@
 const express = require('express');
 
 const authController = require('../controllers/authController');
+const orderController = require('../controllers/orderController');
 const userController = require('../controllers/userController');
 const salesRepProtect = require('../middlewares/salesRepProtect');
 const {auth} = require('../middlewares/authenticate')
@@ -9,7 +10,7 @@ const router = express.Router();
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
-router.post('/logout', authController.logout);
+router.post('/logout', auth, authController.logout);
 
 router.get('/admin/dashboard', userController.getDashboard);
 
@@ -42,7 +43,8 @@ router.get(
   '/me',
   auth,
   userController.getMe,
-  userController.getUser
+  userController.getUser,
+  orderController.getUserOrders
 );
 
 router.patch(
