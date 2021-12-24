@@ -36,7 +36,6 @@ router.get(
 router.get(
   '/products/:product_id',
   auth,
-  authController.accessControl,
   adminController.getVendorByProduct
 );
 

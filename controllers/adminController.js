@@ -148,7 +148,8 @@ exports.getProductsByVendor = catchAsync(async (req, res, next) => {
 
 
 // Get vendor based on product
-exports.getVendorByProduct = catchAsync(async (req, res, next) => {
+exports.getVendorByProduct = 
+  catchAsync(async (req, res, next) => {
   const product = await Product.findById({ _id:req.params.product_id });
   if (!product) return res.status(404).json(
     { status: "failure",
