@@ -42,7 +42,14 @@ router.get(
   '/me',
   auth,
   userController.getMe,
-  userController.getUser
+  userController.getUser,
+  userController.getAllProducts
+);
+
+router.get(
+  '/myproducts',
+  auth,
+  userController.getAllProducts
 );
 
 router.patch(
@@ -72,5 +79,7 @@ router.get(
   authController.accessControl,
   userController.getUsersBasedOnRole
 );
+
+
 
 module.exports = router;
