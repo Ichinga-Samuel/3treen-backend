@@ -118,7 +118,10 @@ exports.activate = catchAsync(async (req, res)=>{
 })
 
 exports.accessControl = catchAsync(async (req, res, next) => {
-  if (req.user.role === 'admin' || req.user.role === 'sub-admin') {
+  // Get User
+  const user = await User.findById({ _id: req.user.id });
+  
+  if (user.role === 'admin' || user.role === 'sub-admin') {
     return next();
   }
   return next(new AppError('Only Admins can do this', 403));

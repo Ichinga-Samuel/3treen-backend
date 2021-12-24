@@ -9,6 +9,8 @@ const productView = require('../models/productViewModel');
 const CartItem = require('../models/cartItemModel');
 const cloudinary = require('../utils/cloudinary');
 
+const User = require('../models/userModel');
+
 exports.uploadProductImages = upload.array('images', 5);
 
 exports.createProduct = catchAsync(async (req, res, next) => {
@@ -40,12 +42,20 @@ exports.createProduct = catchAsync(async (req, res, next) => {
       error,
     });
   }
-  // Add Images array to request body
+  //Add Images array to request body
   req.body.images = imageUrls;
 
   req.body.uploader = req.user.id;
 
   const product = await Product.create(req.body);
+
+  // Get User Uploading Product
+  const user = await User.findById({ _id : req.user.id });
+  // Update user's products
+  user.products.push(product);
+  const updatedUser = await User.findOneAndUpdate(
+      { _id:user._id },
+      { $set:user })
 
   res.status(201).json({
     status: 'success',
