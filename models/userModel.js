@@ -56,6 +56,8 @@ const userSchema = mongoose.Schema({
     type: Number,
   },
 
+  products: [],
+
   rating: {
     type: {
       count: {type: Number, default: 0},

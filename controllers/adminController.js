@@ -121,6 +121,28 @@ exports.getContacts = catchAsync(async (req, res, next) => {
 
 
 
+// Get vendor based on product
+exports.getVendorByProduct = 
+  catchAsync(async (req, res, next) => {
+  const product = await Product.findById({ _id:req.params.product_id });
+  if (!product) return res.status(404).json(
+    { status: "failure",
+  message: "Product Not Found Or Does Not Exist"});
+
+  const vendor = await User.findById({ _id:product.uploader });
+  res.status(200).json(
+    { status: "success",
+    vendor : {
+      fullName : vendor.fullName,
+      photo : vendor.photo,
+      verified : vendor.verified,
+      phone : vendor.workPhone,
+      rating: vendor.rating
+    }
+  })
+});
+
+
 // Get all products based on a vendor
 exports.getProductsByVendor = catchAsync(async (req, res, next) => {
   // get user
@@ -147,7 +169,6 @@ exports.getProductsByVendor = catchAsync(async (req, res, next) => {
 
 })
 
-
 // Get vendor based on product
 exports.getVendorByProduct = 
   catchAsync(async (req, res, next) => {
@@ -168,3 +189,4 @@ exports.getVendorByProduct =
     }
   })
 })
+

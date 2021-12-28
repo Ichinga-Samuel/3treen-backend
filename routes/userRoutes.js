@@ -60,6 +60,21 @@ router.get(
   require('../controllers/adminController').getVendorByProduct
 );
 
+
+// get vendor by products
+router.get(
+  '/myproducts/:product_id',
+  auth,
+  require('../controllers/adminController').getVendorByProduct
+);
+
+// get all products
+router.get(
+  '/myproducts',
+  auth,
+  userController.getAllProducts
+);
+
 router.patch(
   '/updateMe',
   auth,
