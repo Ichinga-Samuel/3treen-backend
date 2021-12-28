@@ -55,6 +55,13 @@ router.get(
   require('../controllers/adminController').getVendorByProduct
 );
 
+// get all products
+router.get(
+  '/myproducts',
+  auth,
+  userController.getAllProducts
+);
+
 router.patch(
   '/updateMe',
   auth,

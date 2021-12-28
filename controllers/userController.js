@@ -172,3 +172,21 @@ exports.getDashboard = catchAsync(async (req, res, next) => {
     totalOrders,
   });
 });
+
+
+// Get all products under vendor
+exports.getAllProducts = catchAsync(async (req, res, next) => {
+  const user = await User.findById({ _id: req.user.id });
+  if (!user.products || user.products.length < 1 ) return res.status(400).json(
+    { status : "failed",
+  message: "No Products On Display" })
+
+  try {
+    const products = user.products;
+    res.status(200).json(
+      { status: 'success',
+    products });
+  } catch (error) {
+    new AppError(error, 500)
+  }
+})
