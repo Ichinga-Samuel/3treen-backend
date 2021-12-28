@@ -1,7 +1,6 @@
 const express = require('express');
 
 const authController = require('../controllers/authController');
-const orderController = require('../controllers/orderController');
 const userController = require('../controllers/userController');
 const salesRepProtect = require('../middlewares/salesRepProtect');
 const {auth} = require('../middlewares/authenticate')
@@ -10,7 +9,7 @@ const router = express.Router();
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
-router.post('/logout', auth, authController.logout);
+router.post('/logout', authController.logout);
 
 router.get('/admin/dashboard', userController.getDashboard);
 
@@ -43,27 +42,22 @@ router.get(
   '/me',
   auth,
   userController.getMe,
-<<<<<<< HEAD
   userController.getUser,
   userController.getAllProducts
 );
 
+// get all products
 router.get(
   '/myproducts',
   auth,
   userController.getAllProducts
 );
 
+// get vendor by products
 router.get(
   '/myproducts/:product_id',
   auth,
   require('../controllers/adminController').getVendorByProduct
-||||||| ec65488
-  userController.getUser
-=======
-  userController.getUser,
-  orderController.getUserOrders
->>>>>>> 27986f1ff310cc15a4eccb8ceaea0993a33115d7
 );
 
 router.patch(

@@ -24,6 +24,7 @@ router.get(
   adminController.getContacts
 );
 
+
 //Get all products based on a vendor
 router.get(
   '/allproducts/:vendor_id',

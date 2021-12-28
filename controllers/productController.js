@@ -42,7 +42,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
       error,
     });
   }
-  //Add Images array to request body
+  // Add Images array to request body
   req.body.images = imageUrls;
 
   req.body.uploader = req.user.id;
