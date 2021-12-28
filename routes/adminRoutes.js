@@ -24,4 +24,11 @@ router.get(
   adminController.getContacts
 );
 
+//Get the vendor of a product
+router.get(
+  '/products/:product_id',
+  auth,
+  adminController.getVendorByProduct
+);
+
 module.exports = router;
