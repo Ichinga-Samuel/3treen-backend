@@ -34,11 +34,6 @@ const orderSchema = mongoose.Schema({
     trim: true,
   },
 
-   address: {
-    type: String,
-    required: true,
-  },
-
   LGA: {
     type: String,
     required: true,

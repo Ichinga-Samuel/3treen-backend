@@ -90,10 +90,8 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.logout = catchAsync(async (req, res, next) => {
   let user = await User.findById(req.user.id)
- 
   user.lastLogoutTime = new Date();
   await user.save()
-  res.send('Logout Succesfull');
 });
 
 exports.verify = catchAsync(async (req, res) =>{

@@ -15,7 +15,6 @@ revoked = async function(req, payload, done){
         let err = new AppError('You recently changed your password! Please login  again', 401)
         return done(err)
     }
-
     return done(null)
 }
 
