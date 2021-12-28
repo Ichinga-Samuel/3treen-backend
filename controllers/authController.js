@@ -56,7 +56,7 @@ exports.signup = catchAsync(async (req, res, next) => {
         let resp = await mail.activate(body)
     }
     catch(e){
-        res.status(201).json({message: 'Account Creation Was Successful. We were unable to send a verification message to your email', status: 'success'})
+        return res.status(201).json({message: 'Account Creation Was Successful. We were unable to send a verification message to your email', status: 'success'})
     }
     res.status(201).json({message: 'Account Creation Was Successful Check your Email to Activate your Account', status: "success"})
   }

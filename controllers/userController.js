@@ -62,6 +62,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 //Get a particular user
 exports.getUser = factory.getOne(User);
 
+//Delete a particular user
+exports.deleteUser = factory.deleteOne(User)
 //Get me Middleware
 exports.getMe = catchAsync(async (req, res, next) => {
   req.params.id = req.user.id;

@@ -15,7 +15,6 @@ router.get('/admin/dashboard', userController.getDashboard);
 
 router.route('/getUser/:id').get(userController.getUser);
 
-router.post('/signUpUser',  authController.signup);
 
 router.post(
   '/signUpAsCompany',
@@ -37,7 +36,7 @@ router.post('/forgotPassword', authController.forgotPassword);
 //update password
 router.patch('/updateMyPassword', auth, authController.updatePassword);
 
-//
+// my profile
 router.get(
   '/me',
   auth,
@@ -46,34 +45,6 @@ router.get(
   userController.getAllProducts
 );
 
-// get all products
-router.get(
-  '/myproducts',
-  auth,
-  userController.getAllProducts
-);
-
-// get vendor by products
-router.get(
-  '/myproducts/:product_id',
-  auth,
-  require('../controllers/adminController').getVendorByProduct
-);
-
-
-// get vendor by products
-router.get(
-  '/myproducts/:product_id',
-  auth,
-  require('../controllers/adminController').getVendorByProduct
-);
-
-// get all products
-router.get(
-  '/myproducts',
-  auth,
-  userController.getAllProducts
-);
 
 router.patch(
   '/updateMe',
@@ -103,6 +74,7 @@ router.get(
   userController.getUsersBasedOnRole
 );
 
-
+// route for deleting user
+router.route('/removeuser/:id').delete(userController.deleteUser);
 
 module.exports = router;

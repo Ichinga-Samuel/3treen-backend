@@ -17,14 +17,18 @@ exports.createProduct = catchAsync(async (req, res, next) => {
   //Get category from request body
   const { category } = req.body;
 
+  console.log(category)
+
   //Check if category exists in DB
   const categoryCheck = await Category.find({ name: category });
 
   //If it doesn't exist throw error
-  if (categoryCheck.length < 1)
+  if (categoryCheck.length < 1) {
     return next(new AppError('Category not found', 404));
-
+  }
   const { files } = req;
+
+ 
 
   const images = [];
   let imageUrls;
@@ -139,7 +143,7 @@ exports.vendorStats = catchAsync(async (req, res, next) => {
 });
 
 exports.vedorProducts = catchAsync(async (req, res, next) => {
-  const products = await Product.find({ uploader: req.user });
+  const products = await Product.find({ uploader: req.user.id });
 
   res.status(200).json({
     status: 'success',
@@ -147,6 +151,73 @@ exports.vedorProducts = catchAsync(async (req, res, next) => {
     products,
   });
 });
+
+// Get vendor based on product
+exports.getVendorByProduct = catchAsync(async (req, res, next) => {
+  const product = await Product.findById({ _id:req.params.product_id });
+
+  if (!product) {
+    return res.status(404).json({ 
+      status: "failure",
+      message: "Product Not Found Or Does Not Exist"
+    });
+  }
+
+  const vendor = await User.findById({ _id:product.uploader });
+
+  return res.status(200).json({ 
+    status: "success",
+    vendor : {
+      fullName : vendor.fullName,
+      photo : vendor.photo,
+      verified : vendor.verified,
+      phone : vendor.workPhone,
+      rating: vendor.rating
+    }
+  })
+
+})
+
+
+// Get all products based on a vendor
+exports.getProductsByVendor = catchAsync(async (req, res, next) => {
+  // get user
+  const user = await User.findById({ _id:req.params.vendor_id });
+
+  if (!user) {
+    return res.status(404).json({ 
+      status : "Failed",
+      message: "User Not Found Or Does Not Exist" 
+    });
+  }
+
+  if (user.role !== "vendor") {
+     return res.status(400).json({ 
+      status : "Failed",
+      message: "User Is Not A Vendor" 
+    });
+  }
+
+  try {
+    const products = user.products;
+    if (products.length < 1) {
+      return res.status(299).json({ 
+        status: "Success",
+        message: "Vendor Has No Products Yet"
+      });
+    } else {
+      return res.status(200).json({ 
+        status: "Success",
+        products 
+      })
+    }
+  } catch (error) {
+    new AppError(error, 500);
+  }
+
+})
+
+
 // exports.topSellingProducts = catchAsync(async (req, res, next) => {
 //   const products = await CartItem.aggregate([
 //     {

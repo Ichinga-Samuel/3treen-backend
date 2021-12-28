@@ -7,7 +7,7 @@ function encode(data, options){
         try{
             let token = jwt.sign(data, JWT_SECRET, options || {})
             let r = Buffer.from(token, 'ascii')
-            resolve(r.toString('base64url'))
+            resolve(r.toString('base64'))
         }
         catch (e){
             reject(e)
@@ -19,7 +19,7 @@ function encode(data, options){
 function decode(data){
     return new Promise((resolve, reject) => {
         try{
-            let r = Buffer.from(data, 'base64url')
+            let r = Buffer.from(data, 'base64')
             let j = r.toString('ascii')
             resolve(jwt.verify(j, JWT_SECRET))
         }

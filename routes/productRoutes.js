@@ -24,6 +24,15 @@ router
   .get(auth, productController.vedorProducts);
 
 router
+  .route('/vendorProducts/:product_id')
+  .get(auth, productController.getVendorByProduct);
+
+  router
+  .route('/productVendor/:vendor_id')
+  .get(auth, productController.getProductsByVendor);
+
+
+router
   .route('/:id')
   .get(productController.getSingleProduct)
   .patch(auth, productController.updateProduct)
