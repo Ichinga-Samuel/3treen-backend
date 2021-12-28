@@ -47,6 +47,14 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
   const product = await Product.create(req.body);
 
+  // Get User Uploading Product
+  const user = await User.findById({ _id : req.user.id });
+  // Update user's products
+  user.products.push(product);
+  const updatedUser = await User.findOneAndUpdate(
+      { _id:user._id },
+      { $set:user })
+
   res.status(201).json({
     status: 'success',
     product,

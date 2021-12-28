@@ -31,4 +31,12 @@ router.get(
   adminController.getVendorByProduct
 );
 
+//Get all products based on a vendor
+router.get(
+  '/allproducts/:vendor_id',
+  auth,
+  authController.accessControl,
+  adminController.getProductsByVendor
+);
+
 module.exports = router;

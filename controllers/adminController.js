@@ -136,4 +136,31 @@ exports.getVendorByProduct =
       rating: vendor.rating
     }
   })
+});
+
+
+// Get all products based on a vendor
+exports.getProductsByVendor = catchAsync(async (req, res, next) => {
+  // get user
+  const user = await User.findById({ _id:req.params.vendor_id });
+  if (!user) return res.status(404).json(
+    { status : "Failed",
+      message: "User Not Found Or Does Not Exist" });
+  if (user.role !== "vendor") return res.status(400).json(
+    { status : "Failed",
+      message: "User Is Not A Vendor" });
+
+  try {
+    const products = user.products;
+    if (products.length < 1) return res.status(299).json(
+      { status: "Success",
+        message: "Vendor Has No Products Yet"});
+
+    else return res.status(200).json(
+      { status: "Success",
+       products })
+  } catch (error) {
+    new AppError(error, 500);
+  }
+
 })
