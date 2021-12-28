@@ -47,6 +47,14 @@ router.get(
   orderController.getUserOrders
 );
 
+
+// get vendor by products
+router.get(
+  '/myproducts/:product_id',
+  auth,
+  require('../controllers/adminController').getVendorByProduct
+);
+
 router.patch(
   '/updateMe',
   auth,
