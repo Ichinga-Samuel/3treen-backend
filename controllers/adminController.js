@@ -4,6 +4,9 @@ const factory = require('./handlerFactory');
 const User = require('../models/userModel');
 const Order = require('../models/orderModel');
 const Referral = require('../models/referralModel');
+const rewiewdModel = require('../models/reviewModel');
+
+const Product = require('../models/productModel');
 
 
 // Get all exising Sales Rep
@@ -117,6 +120,7 @@ exports.getContacts = catchAsync(async (req, res, next) => {
 });
 
 
+
 // Get vendor based on product
 exports.getVendorByProduct = 
   catchAsync(async (req, res, next) => {
@@ -164,3 +168,25 @@ exports.getProductsByVendor = catchAsync(async (req, res, next) => {
   }
 
 })
+
+// Get vendor based on product
+exports.getVendorByProduct = 
+  catchAsync(async (req, res, next) => {
+  const product = await Product.findById({ _id:req.params.product_id });
+  if (!product) return res.status(404).json(
+    { status: "failure",
+  message: "Product Not Found Or Does Not Exist"});
+
+  const vendor = await User.findById({ _id:product.uploader });
+  res.status(200).json(
+    { status: "success",
+    vendor : {
+      fullName : vendor.fullName,
+      photo : vendor.photo,
+      verified : vendor.verified,
+      phone : vendor.workPhone,
+      rating: vendor.rating
+    }
+  })
+})
+

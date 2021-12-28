@@ -37,6 +37,9 @@ const userSchema = mongoose.Schema({
     validate: [validator.isEmail, 'Please Provide a valid email'],
   },
 
+  
+  products: [],
+
   password: {
     hash: {
       type: String,

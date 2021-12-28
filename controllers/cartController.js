@@ -49,37 +49,6 @@ exports.addToCart = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.removeOneFromCart = catchAsync(async (req, res, next) => {
-  //Get Product Id from params
-  const { productId } = req.params;
-
-  //Check if cart Item exists
-  const item = await CartItem.find({ user: req.user.id, productId });
-
-  // Check if cart contains that item, if so decrease quantity
-  if (item.length > 0) {
-    const newQuantity = item[0].quantity - 1;
-
-    // set item quantity to new quantity
-    item[0].quantity = newQuantity;
-
-    // if quentity is zero 
-    if(newQuantity === 0) {
-      // then delete the item from cart
-      await CartItem.findByIdAndDelete(item[0]._id);
-    } else {
-      // update the item
-      await item[0].save();
-    }
-  }
-
-  res.status(200).json({
-    status: 'success',
-    item
-  });
-});
-
-
 exports.getAllCartItems = factory.getAll(CartItem);
 
 exports.getUserCart = catchAsync(async (req, res, next) => {

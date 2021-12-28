@@ -3,7 +3,6 @@ const paystack = require('paystack-api')(
 );
 const Order = require('../models/orderModel');
 const CartItem = require('../models/cartItemModel');
-const User = require('../models/userModel');
 
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -15,10 +14,8 @@ exports.getAllOrders = factory.getAll(Order);
 exports.getSingleOrder = factory.getOne(Order);
 
 exports.createOrder = catchAsync(async (req, res, next) => {
-  // //Fetch cart items with that user id in their field
-  const products = await CartItem.find({ user: req.user.id, ordered: false });
-
-  let user = await User.find({ _id: req.user.id });
+  //Fetch cart items with that user id in their field
+  const products = await CartItem.find({ user: req.user, ordered: false });
 
   if (products.length < 1)
     return next(new AppError('You have nothing in your cart', 401));
@@ -31,15 +28,14 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     state,
     LGA,
     phoneNumber,
-    address: user[0].address,
-    name: user[0].fullName,
+    name: req.user.fullName,
     user: req.user.id,
     products,
   });
 
   //Update cart items whose user field matches the current user id
   await CartItem.updateMany(
-    { user: req.user.id, ordered: false },
+    { user: req.user, ordered: false },
     { $set: { ordered: true, datePurchased: Date.now(), status: 'Pending' } }
   );
 
@@ -77,11 +73,10 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
 
 exports.getUserOrders = catchAsync(async (req, res, next) => {
   const userOrders = await Order.find({ user: req.user.id });
-  let user = req.user;
+
   res.status(200).json({
     status: 'success',
     userOrders,
-    user
   });
 });
 

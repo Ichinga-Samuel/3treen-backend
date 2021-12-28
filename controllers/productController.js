@@ -9,6 +9,8 @@ const productView = require('../models/productViewModel');
 const CartItem = require('../models/cartItemModel');
 const cloudinary = require('../utils/cloudinary');
 
+const User = require('../models/userModel');
+
 exports.uploadProductImages = upload.array('images', 5);
 
 exports.createProduct = catchAsync(async (req, res, next) => {

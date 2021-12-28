@@ -190,3 +190,4 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
     new AppError(error, 500)
   }
 })
+
