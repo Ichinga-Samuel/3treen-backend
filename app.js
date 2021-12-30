@@ -56,6 +56,10 @@ app.use('/api/v1/payment',paymentRouter);
 app.use('/api/v1/chat',chatRouter);
 app.use('/api/v1/email', emailRouter)
 
+app.get('/health', (req, res)=>{
+  res.status(200).send('ok')
+})
+
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
