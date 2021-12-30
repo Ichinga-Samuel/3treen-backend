@@ -36,7 +36,6 @@ const userSchema = mongoose.Schema({
     //An alternative to regex to perform email validation
     validate: [validator.isEmail, 'Please Provide a valid email'],
   },
-
   
   products: [],
 
@@ -55,8 +54,6 @@ const userSchema = mongoose.Schema({
   workPhone: {
     type: Number,
   },
-
-  products: [],
 
   rating: {
     type: {

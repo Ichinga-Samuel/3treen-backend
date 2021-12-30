@@ -12,7 +12,7 @@ const {encode, decode} = require('../utils/encrypt');
 const {emailService} = require('../utils/messanger');
 
 const onlyAdminPermitted = (role) => {
-  if (role == 'QA' || role == 'SR' || role == 'CST'){
+  if (role === 'QA' || role === 'SR' || role === 'CST'){
     return false
   }
   return true
@@ -29,10 +29,10 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  console.log(req.body)
+  // console.log(req.body)
   const userData = { ...req.body };
 
-  let { fullName, email, password, address, state, homePhone, workPhone } = userData;
+  let { fullName, email, password, address, state, homePhone, workPhone, role } = userData;
 
   const userExists = await User.exists({ email });
 
@@ -78,7 +78,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
   let user = await User.findOne({ email }).select('+password');
 
-  if(user.isValidPassword(password)) {
+  if(user?.isValidPassword(password)) {
     user.lastLoginTime = new Date();
     user.lastLogoutTime = null;
     await user.save()
@@ -134,7 +134,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError('There is no user with that email', 404));
   }
-  if (user.role == 'sub-admin'){
+  if (user.role === 'sub-admin'){
     return next(new AppError('Please request a new password from Super admin', 403));
   }
   try{
@@ -166,7 +166,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  if (req.user.role == 'sub-admin') {
+  if (req.user.role === 'sub-admin') {
     return next(new AppError('Only a Super admin can do this', 403));
   }
   const user = await User.findById(req.user.id).select('+password');

@@ -1,0 +1,21 @@
+name: Deploy
+
+on:
+  pull_request:
+    branches:
+      - feature-customer-service
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "treen-api"
+          heroku_email: ${{secrets.EMAIL}}
+          healthcheck: "https://treen-api.herokuapp.com/health"
+          checkstring: "ok"
+          delay: 5
+          rollbackonhealthcheckfailed: true
