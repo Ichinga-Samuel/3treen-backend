@@ -29,7 +29,6 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  console.log(req.body)
   const userData = { ...req.body };
 
   let { fullName, email, password, address, state, homePhone, workPhone } = userData;
@@ -78,7 +77,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
   let user = await User.findOne({ email }).select('+password');
 
-  if(user.isValidPassword(password)) {
+  if(user?.isValidPassword(password)) {
     user.lastLoginTime = new Date();
     user.lastLogoutTime = null;
     await user.save()
@@ -90,10 +89,8 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.logout = catchAsync(async (req, res, next) => {
   let user = await User.findById(req.user.id)
- 
   user.lastLogoutTime = new Date();
   await user.save()
-  res.send('Logout Succesfull');
 });
 
 exports.verify = catchAsync(async (req, res) =>{

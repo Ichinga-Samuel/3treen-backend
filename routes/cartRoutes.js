@@ -15,13 +15,7 @@ router
   .route('/:productId')
   .post(auth, cartController.addToCart);
 
-router
-  .route('/myCart')
-  .get(
-    auth, 
-    cartController.getUserCart
-  );
-
+router.route('/myCart').get(auth, cartController.getUserCart);
 
 router
   .route('/:itemId')
@@ -32,18 +26,11 @@ router
   );
 
 router
-  .route('/delete/:id')
+  .route('/:id')
   .delete(
     auth,
     cartController.accessControl,
-    cartController.clearCart
-  );
-
-router
-  .route('/:productId')
-  .delete(
-    auth,
-    cartController.removeOneFromCart
+    cartController.removeFromCart
   );
 
 module.exports = router;

@@ -1,24 +1,35 @@
 const express = require('express');
-
 const authController = require('../controllers/authController');
 const paymentController = require("../controllers/paymentController")
+const paystackController = require("../controllers/paystackController")
 const {auth} = require("../middlewares/authenticate");
+const paystack = require('paystack-api')(process.env.PAYSTACK_LIVE_SECRET_KEY);
+
+
+// const events = paystack.Events;
+//
+// events.on("paymentrequest.success", data => {
+//     console.log("hola!");
+// });
+
 
 const router = express.Router();
 //card charge
 router.post(
     "/card",
     auth,
-    paymentController.cardCharge
+    authController.getUser,
+    paystackController.charge_card
 )
 
 router.post(
     "/card/verify/:otp",
-    
     auth,
     paymentController.otpAuth
 )
-
+router.post('/paystack_hook', (req, res)=>{
+    console.log(req.body, 'hugf')
+})
 //USSD charge
 router.post(
     "/ussd",

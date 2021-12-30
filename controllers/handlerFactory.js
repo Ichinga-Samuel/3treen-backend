@@ -42,9 +42,10 @@ exports.getOne = (Model, popOptions) =>
       return next(new AppError('No document with that ID', 404));
     }
 
-    req.user = doc;
-
-    next();
+    res.status(200).json({
+      status: 'success',
+      doc,
+    });
   });
 
 exports.createOne = (Model) =>
