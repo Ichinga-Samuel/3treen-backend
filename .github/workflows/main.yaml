@@ -16,6 +16,6 @@ jobs:
           heroku_app_name: "treen-api"
           heroku_email: ${{secrets.EMAIL}}
           healthcheck: "https://treen-api.herokuapp.com/health"
-          checkstring: "ok"
+          checkstring: "OK"
           delay: 5
           rollbackonhealthcheckfailed: true

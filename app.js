@@ -45,14 +45,14 @@ app.use('/api/v1/category', categoryRouter);
 app.use('/api/v1/messages', messageRouter);
 app.use('/api/v1/referrals', referralRouter);
 app.use('/api/v1/review', reviewRoute);
-app.use('/api/v1/search',seachRouter);
+app.use('/api/v1/search',searchRouter);
 app.use('/api/v1/inventory', inventoryRouter);
 app.use('/api/v1/payment',paymentRouter);
 app.use('/api/v1/chat',chatRouter);
 app.use('/api/v1/email', emailRouter)
 
 app.get('/health', (req, res)=>{
-  res.status(200).send('ok')
+  res.status(200).send('OK')
 })
 
 app.all('*', (req, res, next) => {
